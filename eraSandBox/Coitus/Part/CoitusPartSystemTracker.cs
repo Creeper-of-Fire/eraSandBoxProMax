@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace eraSandBox.Coitus
+namespace eraSandBox.Coitus.Part
 {
     public class CoitusPartTracker
     {
-        public List<CoitusPart> totalCoitus;
         public List<CoitusPart> entranceCoitus;
         public List<CoitusPart> surfaceCoitus;
+        public List<CoitusPart> totalCoitus;
 
         public void ExposeData()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

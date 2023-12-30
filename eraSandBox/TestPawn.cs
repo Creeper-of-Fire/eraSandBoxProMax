@@ -1,4 +1,4 @@
-﻿using eraSandBox.Coitus;
+﻿using eraSandBox.Coitus.Part;
 
 namespace eraSandBox
 {

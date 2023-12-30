@@ -1,4 +1,4 @@
-﻿namespace eraSandBox.Coitus
+﻿namespace eraSandBox.Coitus.Part
 {
     public class CoitusPartLinker
     {
