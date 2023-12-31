@@ -4,7 +4,9 @@ namespace eraSandBox
 {
     public class TestPawn
     {
-        public float height;
+        /// <summary> 单位：毫米 </summary>
+        public int heightMillimeter;
+
         public CoitusPatternVaginaPartSystem System;
     }
 }

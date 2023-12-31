@@ -4,14 +4,14 @@ using System.Linq;
 
 namespace eraSandBox.Coitus.Part
 {
-    /// <summary></summary>
+    /// <summary> </summary>
     public class CoitusPatternMentulaRoute : ICloneable
     {
-        public IEnumerable<CoitusPatternMentulaPart> parts;
+        public List<CoitusPatternMentulaPart> parts;
         public TestPawn pawn;
 
-        /// <summary>复制自身，只复制 <see cref="parts" /> 里的内容</summary>
-        /// <returns>自身的复制，类型为 <see cref="object" /></returns>
+        /// <summary> 复制自身，只复制 <see cref="parts" /> 里的内容 </summary>
+        /// <returns> 自身的复制，类型为 <see cref="object" /> </returns>
         public object Clone()
         {
             return new CoitusPatternMentulaRoute
@@ -22,7 +22,7 @@ namespace eraSandBox.Coitus.Part
 
         public void Add(CoitusPatternMentulaPart part)
         {
-            this.parts = this.parts.Append(part);
+            this.parts.Add(part);
         }
 
         public CoitusPatternVaginaRoute ChooseVagina()
@@ -32,19 +32,19 @@ namespace eraSandBox.Coitus.Part
             return routes.ElementAt(r.Next(routes.Count));
         }
 
-        public float GetLength()
+        public int GetLengthMillimeter()
         {
-            return this.parts.Sum(part => part.length.value);
+            return this.parts.Sum(part => part.length.valueMillimeter);
         }
 
-        public float GetDiameter()
+        public int GetDiameterMillimeter()
         {
-            return this.parts.Select(part => part.diameter.value).Max();
+            return this.parts.Select(part => part.diameter.valueMillimeter).Max();
         }
 
         public void FuckIn(CoitusPatternVaginaRoute route)
         {
-            CoitusUtility.Fuck(route, this);
+            FuckUtility.FuckBetweenRoute(route, this);
         }
 
         public bool Contains(CoitusPatternMentulaPart part)

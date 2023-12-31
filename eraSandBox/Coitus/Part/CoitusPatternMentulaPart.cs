@@ -1,9 +1,9 @@
 ﻿namespace eraSandBox.Coitus.Part
 {
-    /// <summary></summary>
+    /// <summary> </summary>
     public class CoitusPatternMentulaPart : CoitusPart
     {
-        ///<value></value>
+        /// <value> </value>
         public bool transformAble;
 
         public CoitusPatternMentulaPart(TestPawn pawn) : base(pawn)

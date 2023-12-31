@@ -4,35 +4,30 @@ using System.Linq;
 namespace eraSandBox.Coitus.Part
 {
     /// <summary>
-    /// 有四种类型：入口、通道、终点、表面。这些类型是根据它“连接”的对象实时获得的。
-    /// 有三个形态属性：长度和粗细等级（以及对应的已扩张量），
-    /// 还有具体形状； 两个存储属性：容积、表面积；
+    /// 有四种类型：入口、通道、终点、表面。这些类型是根据它“连接”的对象实时获得的。 有三个形态属性：长度和粗细等级（以及对应的已扩张量）， 还有具体形状； 两个存储属性：容积、表面积；
     /// 两个扩张属性：elasticity弹性（被张开的能力）、plasticity可塑性（恢复原状的能力） 它存储“连接”的方法是“连接口对象”
     /// </summary>
     public class CoitusPatternVaginaPart : CoitusPart
     {
-        ///<value>Fucker</value>
-        public List<CoitusPatternMentulaPart> contents;
-        
-        /// <summary>结构作为节点的类型</summary>
+        /// <summary> 结构作为节点的类型 </summary>
         public enum CoitusLinkType
         {
-            /// <summary>暂未赋值</summary>
+            /// <summary> 暂未赋值 </summary>
             Null = 0,
 
-            /// <summary>腔道的底部</summary>
+            /// <summary> 腔道的底部 </summary>
             End = 1,
 
-            /// <summary>腔道的入口</summary>
+            /// <summary> 腔道的入口 </summary>
             Entrance = 2,
 
-            /// <summary>通道部分</summary>
+            /// <summary> 通道部分 </summary>
             Corridor = 3,
 
-            /// <summary>表面</summary>
+            /// <summary> 表面 </summary>
             Surface = 4,
 
-            /// <summary>标志“未启用”的状态</summary>
+            /// <summary> 标志“未启用”的状态 </summary>
             Hidden = 5
         }
 
@@ -40,20 +35,24 @@ namespace eraSandBox.Coitus.Part
         public CoitusLinkType coitusLinkType;
         public Coitus_MatterContainedData Content;
 
+        /// <value> Fucker </value>
+        public Dictionary<CoitusPatternMentulaPart, int> contents;
+
         public int elasticityLevel;
         public int plasticityLevel;
+        public int tighticityLevel;
 
-        /// <summary>初始化</summary>
-        /// <param name="pawn"></param>
-        /// <param name="links"></param>
-        /// <param name="coitusLinkType"></param>
+        /// <summary> 初始化 </summary>
+        /// <param name="pawn"> </param>
+        /// <param name="links"> </param>
+        /// <param name="coitusLinkType"> </param>
         public CoitusPatternVaginaPart(TestPawn pawn, List<CoitusPatternVaginaPart> links,
             CoitusLinkType coitusLinkType = CoitusLinkType.Null) : base(pawn)
         {
             this.length =
-                new CoitusScalePatternVagina(CalculateBaseLength(pawn, this.lengthPercentage), this.lengthLevel);
+                new CoitusScalePatternVagina(CalculateBaseLength(pawn, this.lengthTenThousandth), this.lengthLevel);
             this.diameter =
-                new CoitusScalePatternVagina(CalculateBaseDiameter(pawn, this.lengthPercentage), this.diameterLevel);
+                new CoitusScalePatternVagina(CalculateBaseDiameter(pawn, this.lengthTenThousandth), this.diameterLevel);
             this.links = new List<CoitusPatternVaginaPart>(links);
             this.coitusLinkType = coitusLinkType;
             UpdateCoitusLinkType();
@@ -71,16 +70,14 @@ namespace eraSandBox.Coitus.Part
             private set => base.diameter = value;
         }
 
-        /**
-         * <summary>
-         * 更新节点类型 <see cref="CoitusLinkType" /> ：
-         * <para><see cref="CoitusLinkType.Surface" /> -表面比较特殊，通过其他函数来设定</para>
-         * <see cref="CoitusLinkType.Hidden" /> -不与任何东西连接，则为隐藏
-         * <para><see cref="CoitusLinkType.End" /> -如果不是表面又只有一个相连，则为底部</para>
-         * <see cref="CoitusLinkType.Entrance" /> -如果和外部相连，则为入口
-         * <para><see cref="CoitusLinkType.Corridor" /> -其他情况，则为通道</para>
-         * </summary>
-         */
+
+        /// <summary> 更新节点类型 <see cref="CoitusLinkType" /> ：
+        /// <para> <see cref="CoitusLinkType.Surface" /> - 表面比较特殊，通过其他函数来设定 </para>
+        /// <see cref="CoitusLinkType.Hidden" /> - 不与任何东西连接，则为隐藏
+        /// <para> <see cref="CoitusLinkType.End" /> - 如果不是表面又只有一个相连，则为底部 </para>
+        /// <see cref="CoitusLinkType.Entrance" /> - 如果和外部相连，则为入口
+        /// <para> <see cref="CoitusLinkType.Corridor" /> - 其他情况，则为通道 </para>
+        /// </summary>
         public void UpdateCoitusLinkType()
         {
             this.coitusLinkType = UpdateCoitusLinkType_GetType();

@@ -10,18 +10,18 @@ namespace eraSandBox.Coitus.Part
         public List<CoitusPatternVaginaRoute> totalVaginaRoutes;
         public List<CoitusPatternVaginaRoute> twoDirectionVaginaRoutes;
 
-        /// <summary>在已生成所有线路的情况下，重新生成包含输入部件的路线</summary>
-        /// <param name="section">输入需要整理的部件</param>
+        /// <summary> 在已生成所有线路的情况下，重新生成包含输入部件的路线 </summary>
+        /// <param name="section"> 输入需要整理的部件 </param>
         public void UpdateRoute(List<CoitusPatternVaginaPart> section)
         {
             var needUpdateRoutes = new List<CoitusPatternVaginaRoute>();
-            foreach (CoitusPatternVaginaPart part in section)
-            foreach (CoitusPatternVaginaRoute route in this.totalVaginaRoutes)
+            foreach (var part in section)
+            foreach (var route in this.totalVaginaRoutes)
                 if (route.Contains(part))
                     needUpdateRoutes.Add(route);
 
             var needUpdateRoutesStartPart = new List<CoitusPatternVaginaPart>();
-            foreach (CoitusPatternVaginaRoute route in needUpdateRoutes)
+            foreach (var route in needUpdateRoutes)
             {
                 this.totalVaginaRoutes.Remove(route);
                 needUpdateRoutesStartPart.Add(route.GetEntrance());
@@ -36,13 +36,13 @@ namespace eraSandBox.Coitus.Part
             //UpdateRoutes_ClassificationAndDeduplication();
         }
 
-        /// <summary>由给予的入口，获得这些入口对应的所有路线（两端皆为入口的会计算两次）</summary>
-        /// <param name="entranceParts">入口</param>
-        /// <returns>入口可产生的路线（两端皆为入口的会计算两次）</returns>
+        /// <summary> 由给予的入口，获得这些入口对应的所有路线（两端皆为入口的会计算两次） </summary>
+        /// <param name="entranceParts"> 入口 </param>
+        /// <returns> 入口可产生的路线（两端皆为入口的会计算两次） </returns>
         private static List<CoitusPatternVaginaRoute> GetRoutes(List<CoitusPatternVaginaPart> entranceParts)
         {
             var totalRoutes = new List<CoitusPatternVaginaRoute>();
-            foreach (CoitusPatternVaginaPart startPart in entranceParts)
+            foreach (var startPart in entranceParts)
             {
                 var route = new CoitusPatternVaginaRoute();
                 route.Add(startPart);
@@ -59,7 +59,7 @@ namespace eraSandBox.Coitus.Part
                         return;
                     }
 
-                    foreach (CoitusPatternVaginaPart nextPart in nowPart.links)
+                    foreach (var nextPart in nowPart.links)
                     {
                         if (nowPart.links.Contains(nextPart))
                             continue;
@@ -73,13 +73,13 @@ namespace eraSandBox.Coitus.Part
             return totalRoutes;
         }
 
-        /// <summary>重新生成所有的可用插入路线</summary>
-        /// <param name="total">输入未整理的部件</param>
+        /// <summary> 重新生成所有的可用插入路线 </summary>
+        /// <param name="total"> 输入未整理的部件 </param>
         public void TotalUpdateRoutes(List<CoitusPatternVaginaPart> total)
         {
             var SurfaceParts = new List<CoitusPatternVaginaPart>();
 
-            foreach (CoitusPatternVaginaPart coitus_SearchSurface in total)
+            foreach (var coitus_SearchSurface in total)
                 if (coitus_SearchSurface.coitusLinkType == CoitusPatternVaginaPart.CoitusLinkType.Surface)
                     SurfaceParts.Add(coitus_SearchSurface);
             //选取起点（这步有一点多余，但是性能消耗很小，所以就无所谓了）
@@ -93,13 +93,13 @@ namespace eraSandBox.Coitus.Part
         }
 
 
-        /// <summary>对totalVaginaRoutes进行分类和去重，并且直接更新this里面的数值 由于程序的便利问题，本代码被弃用，是否为两端会进行重复存储</summary>
+        /// <summary> 对totalVaginaRoutes进行分类和去重，并且直接更新this里面的数值 由于程序的便利问题，本代码被弃用，是否为两端会进行重复存储 </summary>
         [Obsolete]
         private void UpdateRoutes_ClassificationAndDeduplication()
         {
             var oneDirectionRoutes = new List<CoitusPatternVaginaRoute>();
             var twoDirectionRoutesWithSameRoutes = new List<CoitusPatternVaginaRoute>();
-            foreach (CoitusPatternVaginaRoute routeType in this.totalVaginaRoutes)
+            foreach (var routeType in this.totalVaginaRoutes)
             {
                 if (routeType.HasTwoDirection())
                 {
@@ -112,7 +112,7 @@ namespace eraSandBox.Coitus.Part
 
             this.oneDirectionVaginaRoutes = oneDirectionRoutes;
             var twoDirectionRoutesRemoveSame = new List<CoitusPatternVaginaRoute>();
-            foreach (CoitusPatternVaginaRoute checkSameRoute0 in twoDirectionRoutesWithSameRoutes)
+            foreach (var checkSameRoute0 in twoDirectionRoutesWithSameRoutes)
                 if (twoDirectionRoutesRemoveSame.Exists(
                         checkSameRoute1 => checkSameRoute0.IsSame(checkSameRoute1)
                     ))
