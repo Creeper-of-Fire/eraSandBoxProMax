@@ -16,6 +16,13 @@ namespace eraSandBox.Coitus.Part
             Destructive = FuckModeType.Destructive
         }
 
+        public enum ExpandType
+        {
+            ImPerceptible = FuckModeType.ImPerceptible,
+            Comfortable = FuckModeType.Comfortable,
+            UnComfortable = FuckModeType.UnComfortable
+        }
+
         public enum FuckAttitude
         {
             ShouldComfort = 0,
@@ -49,21 +56,18 @@ namespace eraSandBox.Coitus.Part
         }
 
 
-        /// <summary> </summary>
-        /// <param name="vaginaRoute"> </param>
-        /// <param name="mentulaRoute"> </param>
-        /// <param name="fuckAttitude"> </param>
         public static void FuckBetweenRoute(
-            CoitusPatternVaginaRoute vaginaRoute,
-            CoitusPatternMentulaRoute mentulaRoute,
+            CoitusVaginaRoute vaginaRoute,
+            CoitusMentulaRoute mentulaRoute,
+            int mentulaInsertLength,
             FuckAttitude fuckAttitude = FuckAttitude.ShouldComfort)
         {
             var vaginaParts = vaginaRoute.parts;
             var mentulaParts = mentulaRoute.parts;
-            var beingFuckPart = new HashSet<CoitusPatternVaginaPart>();
+            var beingFuckPart = new HashSet<CoitusVaginaPart>();
 
-            var fuckMode = GetFuckMode(vaginaRoute, mentulaRoute, fuckAttitude, out float expansionOrContractionRatio);
-            AssignmentMentulaForVagina(vaginaParts, mentulaParts, fuckMode, expansionOrContractionRatio,
+            var fuckMode = GetFuckMode(vaginaRoute, mentulaInsertLength, fuckAttitude);
+            AssignmentMentulaForVagina(vaginaParts, mentulaParts, fuckMode,
                 in beingFuckPart);
 
             foreach (var part in beingFuckPart)
@@ -73,40 +77,42 @@ namespace eraSandBox.Coitus.Part
                 Destructive(vaginaParts.Last());
         }
 
-        private static void Fuck(CoitusPatternVaginaPart part)
+        private static void Fuck(CoitusVaginaPart part)
         {
         }
 
-        private static void Destructive(CoitusPatternVaginaPart part)
+        private static void Destructive(CoitusVaginaPart part)
         {
+        }
+
+        public static void FuckBetweenRoute(
+            CoitusVaginaRoute vaginaRoute,
+            CoitusMentulaRoute mentulaRoute,
+            FuckAttitude fuckAttitude = FuckAttitude.ShouldComfort)
+        {
+            FuckBetweenRoute(vaginaRoute, mentulaRoute, mentulaRoute.GetLengthMillimeter(), fuckAttitude);
         }
 
         #region FuckBetweenRoute的子函数
 
         private static FuckModeType GetFuckMode(
-            CoitusPatternVaginaRoute vaginaRoute,
-            CoitusPatternMentulaRoute mentulaRoute,
-            FuckAttitude fuckAttitude,
-            out float expansionOrContractionRatio)
+            CoitusVaginaRoute vaginaRoute,
+            int mentulaInsertLength,
+            FuckAttitude fuckAttitude)
         {
             FuckModeType fuckMode;
-            expansionOrContractionRatio = 0;
-            switch (vaginaRoute.GetLength_ComfortType(mentulaRoute.GetLengthMillimeter()))
+            switch (vaginaRoute.length.ComfortType(mentulaInsertLength))
             {
                 case ComfortType.ImPerceptible:
                     fuckMode = FuckModeType.ImPerceptible;
                     break;
                 case ComfortType.Comfortable:
-                    expansionOrContractionRatio =
-                        (float)mentulaRoute.GetLengthMillimeter() / vaginaRoute.GetLength_PerceptMillimeter();
                     fuckMode = FuckModeType.Comfortable;
                     break;
                 case ComfortType.UnComfortable when fuckAttitude == FuckAttitude.ShouldComfort:
                     fuckMode = FuckModeType.NotFullEntryComfortable;
                     break;
                 case ComfortType.UnComfortable:
-                    expansionOrContractionRatio =
-                        (float)mentulaRoute.GetLengthMillimeter() / vaginaRoute.GetLength_UnComfortMillimeter();
                     fuckMode = FuckModeType.UnComfortable;
                     break;
                 case ComfortType.Destructive when fuckAttitude == FuckAttitude.ShouldComfort:
@@ -125,21 +131,41 @@ namespace eraSandBox.Coitus.Part
                     throw new ArgumentOutOfRangeException();
             }
 
+            vaginaRoute.length.expansionOrContractionRatio.Add(fuckMode switch
+            {
+                FuckModeType.ImPerceptible => CoitusUtility.ImPerceptRATIO,
+                FuckModeType.Comfortable => ExpansionOrContractionRatio(
+                    vaginaRoute.length,
+                    mentulaInsertLength,
+                    vaginaRoute.length.PerceptMillimeter()),
+                FuckModeType.NotFullEntryComfortable => 0,
+                FuckModeType.UnComfortable => ExpansionOrContractionRatio(
+                    vaginaRoute.length,
+                    mentulaInsertLength,
+                    vaginaRoute.length.UnComfortMillimeter()),
+                FuckModeType.NotFullEntryUnComfortable => CoitusUtility.UnComfortRATIO,
+                FuckModeType.Destructive => CoitusUtility.UnComfortRATIO,
+                FuckModeType.Implement => CoitusUtility.UnComfortRATIO,
+                _ => throw new ArgumentOutOfRangeException()
+            });
+
+            foreach (var part in vaginaRoute.parts)
+                part.length.expansionOrContractionRatio.Add(vaginaRoute.length.expansionOrContractionRatio.RatioMax());
+
             return fuckMode;
         }
 
-        /// <summary> 为每个Vagina分配mentula，直到其中一个的长度被耗尽 </summary>
-        /// <param name="vaginaParts"> vaginaParts </param>
-        /// <param name="mentulaParts"> mentulaParts </param>
-        /// <param name="fuckMode"> fuckMode </param>
-        /// <param name="expansionOrContractionRatio"> 仅在fuckMode为Comfortable和UnComfortable时需要 </param>
-        /// <param name="beingFuckPart"> 传出被Fuck的部分，因为是Vagina包住Mentula，所以只需要传出Vagina就行了 </param>
+        public static float ExpansionOrContractionRatio(IVaginaScale vagina, int mentulaInsert, int total) =>
+            (float)(mentulaInsert - vagina.OriginalMillimeter())
+            / Math.Abs(total - vagina.OriginalMillimeter());
+        //使用Abs。这样的话，当输入为Percept时，就会返回负数
+
+        [Obsolete]
         private static void AssignmentMentulaForVagina(
-            IEnumerable<CoitusPatternVaginaPart> vaginaParts,
-            IEnumerable<CoitusPatternMentulaPart> mentulaParts,
+            IEnumerable<CoitusVaginaPart> vaginaParts,
+            IEnumerable<CoitusMentulaPart> mentulaParts,
             FuckModeType fuckMode,
-            float expansionOrContractionRatio,
-            in HashSet<CoitusPatternVaginaPart> beingFuckPart
+            in HashSet<CoitusVaginaPart> beingFuckPart
         )
         {
             if (fuckMode == FuckModeType.NotFullEntryComfortable || fuckMode == FuckModeType.NotFullEntryUnComfortable)
@@ -164,19 +190,24 @@ namespace eraSandBox.Coitus.Part
 
                 int newVaginaLength;
                 int newMentulaLength = nowMentula.length.valueMillimeter;
+                //TODO 修改为：nowVagina.length自己计算自己的ComfortType和尺寸(因为要考虑多个插入的情况)。或者在之前的计算中就考虑多个插入的情况
                 switch (fuckMode)
                 {
                     case FuckModeType.ImPerceptible:
                         newVaginaLength = nowVagina.length.PerceptMillimeter();
                         break;
                     case FuckModeType.Comfortable:
-                        newVaginaLength = (int)(nowVagina.length.PerceptMillimeter() * expansionOrContractionRatio);
+                        newVaginaLength = nowVagina.length.OriginalMillimeter() +
+                                          nowVagina.length.ToPerceptMillimeter() *
+                                          nowVagina.length.expansionOrContractionRatio;
                         break;
                     case FuckModeType.NotFullEntryComfortable:
                         newVaginaLength = nowVagina.length.ComfortMillimeter();
                         break;
                     case FuckModeType.UnComfortable:
-                        newVaginaLength = (int)(nowVagina.length.UnComfortMillimeter() * expansionOrContractionRatio);
+                        newVaginaLength = nowVagina.length.OriginalMillimeter() +
+                                          nowVagina.length.ToUnComfortMillimeter() *
+                                          nowVagina.length.expansionOrContractionRatio;
                         break;
                     case FuckModeType.NotFullEntryUnComfortable:
                     case FuckModeType.Destructive:
@@ -193,9 +224,9 @@ namespace eraSandBox.Coitus.Part
 
                 beingFuckPart.Add(nowVagina);
 
-                switch (newMentulaLengthRemain.CompareTo(newVaginaLengthRemain))
+                switch ((MathUtility.Comparing)newMentulaLengthRemain.CompareTo(newVaginaLengthRemain))
                 {
-                    case 0:
+                    case MathUtility.Comparing.Equal:
                         //nowMentulaLengthRemain == nowVaginaLengthRemain，刚刚好
                         nowVagina.contents.Add(nowMentula, newMentulaLengthRemain);
                         oldVaginaLengthRemain = 0;
@@ -205,7 +236,7 @@ namespace eraSandBox.Coitus.Part
                         if (nowMentulaEnumerator.MoveNext())
                             return;
                         break;
-                    case -1:
+                    case MathUtility.Comparing.LastBigger:
                         //nowMentulaLengthRemain < nowVaginaLengthRemain，Vagina多出一大截
                         nowVagina.contents.Add(nowMentula, newMentulaLengthRemain);
                         oldVaginaLengthRemain = newVaginaLengthRemain - newMentulaLength;
@@ -215,7 +246,7 @@ namespace eraSandBox.Coitus.Part
                         if (nowMentulaEnumerator.MoveNext())
                             return;
                         break;
-                    case 1:
+                    case MathUtility.Comparing.FirstBigger:
                         //nowMentulaLengthRemain > nowVaginaLengthRemain，Mentula多出一大截
                         nowVagina.contents.Add(nowMentula, newVaginaLengthRemain);
                         oldVaginaLengthRemain = 0;

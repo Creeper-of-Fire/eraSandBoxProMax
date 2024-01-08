@@ -7,7 +7,7 @@ namespace eraSandBox.Coitus.Part
     /// 有四种类型：入口、通道、终点、表面。这些类型是根据它“连接”的对象实时获得的。 有三个形态属性：长度和粗细等级（以及对应的已扩张量）， 还有具体形状； 两个存储属性：容积、表面积；
     /// 两个扩张属性：elasticity弹性（被张开的能力）、plasticity可塑性（恢复原状的能力） 它存储“连接”的方法是“连接口对象”
     /// </summary>
-    public class CoitusPatternVaginaPart : CoitusPart
+    public class CoitusVaginaPart : CoitusPart
     {
         /// <summary> 结构作为节点的类型 </summary>
         public enum CoitusLinkType
@@ -31,12 +31,15 @@ namespace eraSandBox.Coitus.Part
             Hidden = 5
         }
 
-        public readonly List<CoitusPatternVaginaPart> links;
+        public readonly List<CoitusVaginaPart> links;
         public CoitusLinkType coitusLinkType;
         public Coitus_MatterContainedData Content;
 
-        /// <value> Fucker </value>
-        public Dictionary<CoitusPatternMentulaPart, int> contents;
+        /// <c> CoitusMentulaPart: 部件 </c>
+        /// <para>
+        /// <c> int: 长度 </c>
+        /// </para>
+        public Dictionary<CoitusMentulaPart, int> contents = new Dictionary<CoitusMentulaPart, int>();
 
         public int elasticityLevel;
         public int plasticityLevel;
@@ -46,27 +49,27 @@ namespace eraSandBox.Coitus.Part
         /// <param name="pawn"> </param>
         /// <param name="links"> </param>
         /// <param name="coitusLinkType"> </param>
-        public CoitusPatternVaginaPart(TestPawn pawn, List<CoitusPatternVaginaPart> links,
+        public CoitusVaginaPart(TestPawn pawn, List<CoitusVaginaPart> links,
             CoitusLinkType coitusLinkType = CoitusLinkType.Null) : base(pawn)
         {
             this.length =
-                new CoitusScalePatternVagina(CalculateBaseLength(pawn, this.lengthTenThousandth), this.lengthLevel);
+                new CoitusVaginaScaleLinear(CalculateBaseLength(pawn, this.lengthTenThousandth), this.lengthLevel);
             this.diameter =
-                new CoitusScalePatternVagina(CalculateBaseDiameter(pawn, this.lengthTenThousandth), this.diameterLevel);
-            this.links = new List<CoitusPatternVaginaPart>(links);
+                new CoitusVaginaScaleLinear(CalculateBaseDiameter(pawn, this.lengthTenThousandth), this.diameterLevel);
+            this.links = new List<CoitusVaginaPart>(links);
             this.coitusLinkType = coitusLinkType;
             UpdateCoitusLinkType();
         }
 
-        public new CoitusScalePatternVagina length
+        public new CoitusVaginaScaleLinear length
         {
-            get => (CoitusScalePatternVagina)base.length;
+            get => (CoitusVaginaScaleLinear)base.length;
             private set => base.length = value;
         }
 
-        public new CoitusScalePatternVagina diameter
+        public new CoitusVaginaScaleLinear diameter
         {
-            get => (CoitusScalePatternVagina)base.diameter;
+            get => (CoitusVaginaScaleLinear)base.diameter;
             private set => base.diameter = value;
         }
 
@@ -107,13 +110,16 @@ namespace eraSandBox.Coitus.Part
             }
 
             //球体
-            public static Geometry sphere => new Geometry();
+            public static Geometry sphere =>
+                new Geometry();
 
             //椭球体
-            public static Geometry spheroid => new Geometry();
+            public static Geometry spheroid =>
+                new Geometry();
 
             //圆柱体
-            public static Geometry cylinder => new Geometry();
+            public static Geometry cylinder =>
+                new Geometry();
         }
     }
 

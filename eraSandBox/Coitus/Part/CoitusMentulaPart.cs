@@ -1,12 +1,12 @@
 ﻿namespace eraSandBox.Coitus.Part
 {
     /// <summary> </summary>
-    public class CoitusPatternMentulaPart : CoitusPart
+    public class CoitusMentulaPart : CoitusPart
     {
         /// <value> </value>
         public bool transformAble;
 
-        public CoitusPatternMentulaPart(TestPawn pawn) : base(pawn)
+        public CoitusMentulaPart(TestPawn pawn) : base(pawn)
         {
         }
 

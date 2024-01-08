@@ -4,7 +4,7 @@
     {
         public CoitusPart linkA;
         public CoitusPart linkB;
-        public CoitusScalePatternVagina diameterMillimeter { get; }
+        public CoitusVaginaScaleLinear diameterMillimeter { get; }
         public float transverseSizeLevel { get; set; }
     }
 }

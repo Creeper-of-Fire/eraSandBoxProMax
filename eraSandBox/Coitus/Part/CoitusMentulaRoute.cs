@@ -5,27 +5,25 @@ using System.Linq;
 namespace eraSandBox.Coitus.Part
 {
     /// <summary> </summary>
-    public class CoitusPatternMentulaRoute : ICloneable
+    public class CoitusMentulaRoute : ICloneable
     {
-        public List<CoitusPatternMentulaPart> parts;
+        public List<CoitusMentulaPart> parts;
         public TestPawn pawn;
 
         /// <summary> 复制自身，只复制 <see cref="parts" /> 里的内容 </summary>
         /// <returns> 自身的复制，类型为 <see cref="object" /> </returns>
-        public object Clone()
-        {
-            return new CoitusPatternMentulaRoute
+        public object Clone() =>
+            new CoitusMentulaRoute
             {
                 parts = this.parts.ToArray().ToList()
             };
-        }
 
-        public void Add(CoitusPatternMentulaPart part)
+        public void Add(CoitusMentulaPart part)
         {
             this.parts.Add(part);
         }
 
-        public CoitusPatternVaginaRoute ChooseVagina()
+        public CoitusVaginaRoute ChooseVagina()
         {
             var routes = this.pawn.System.totalVaginaRoutes;
             var r = new Random();
@@ -42,14 +40,12 @@ namespace eraSandBox.Coitus.Part
             return this.parts.Select(part => part.diameter.valueMillimeter).Max();
         }
 
-        public void FuckIn(CoitusPatternVaginaRoute route)
+        public void FuckIn(CoitusVaginaRoute vaginaRoute)
         {
-            FuckUtility.FuckBetweenRoute(route, this);
+            FuckUtility.FuckBetweenRoute(vaginaRoute, this);
         }
 
-        public bool Contains(CoitusPatternMentulaPart part)
-        {
-            return this.parts.Contains(part);
-        }
+        public bool Contains(CoitusMentulaPart part) =>
+            this.parts.Contains(part);
     }
 }

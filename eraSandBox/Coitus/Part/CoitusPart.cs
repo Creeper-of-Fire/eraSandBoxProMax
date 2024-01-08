@@ -5,12 +5,12 @@
     {
         public const int TenThousand = 10000;
 
-        public CoitusScale diameter;
+        public CoitusScaleLinear diameter;
 
         /// <value> <see cref="lengthLevel" /> 和 <see cref="diameterLevel" /> 是整个运行过程中唯一需要被外部修改数值 </value>
         protected int diameterLevel;
 
-        public CoitusScale length;
+        public CoitusScaleLinear length;
 
         /// <value> <see cref="lengthLevel" /> 和 <see cref="diameterLevel" /> 是整个运行过程中唯一需要被外部修改的数值 </value>
         protected int lengthLevel;
@@ -31,15 +31,11 @@
             this.pawn = pawn;
         }
 
-        protected static int CalculateBaseLength(TestPawn pawn, int lengthTenThousandth)
-        {
-            return pawn.heightMillimeter * lengthTenThousandth / TenThousand;
-        }
+        protected static int CalculateBaseLength(TestPawn pawn, int lengthTenThousandth) =>
+            pawn.heightMillimeter * lengthTenThousandth / TenThousand;
 
-        protected static int CalculateBaseDiameter(TestPawn pawn, int lengthTenThousandth)
-        {
-            return CalculateBaseLength(pawn, lengthTenThousandth);
-        }
+        protected static int CalculateBaseDiameter(TestPawn pawn, int lengthTenThousandth) =>
+            CalculateBaseLength(pawn, lengthTenThousandth);
 
         public void Agere() //启动效果，包括Vagina和Mentula效果
         {

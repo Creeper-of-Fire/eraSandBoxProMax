@@ -40,16 +40,20 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Coitus\Axis.cs"/>
+        <Compile Include="Coitus\MathUtility.cs"/>
         <Compile Include="Coitus\Part\CoitusPart.cs"/>
         <Compile Include="Coitus\Part\CoitusPartLinker.cs"/>
-        <Compile Include="Coitus\Part\CoitusPartsRoute.cs" />
+        <Compile Include="Coitus\Part\CoitusPartsRoute.cs"/>
         <Compile Include="Coitus\Part\CoitusPartSystemTracker.cs"/>
-        <Compile Include="Coitus\Part\CoitusPatternMentulaPart.cs"/>
-        <Compile Include="Coitus\Part\CoitusPatternMentulaRoute.cs"/>
-        <Compile Include="Coitus\Part\CoitusPatternVaginaPart.cs"/>
-        <Compile Include="Coitus\Part\CoitusPatternVaginaRoute.cs"/>
-        <Compile Include="Coitus\Part\CoitusPatternVaginaPartSystem.cs"/>
-        <Compile Include="Coitus\Part\CoitusScalePatternVagina.cs"/>
+        <Compile Include="Coitus\Part\CoitusMentulaPart.cs"/>
+        <Compile Include="Coitus\Part\CoitusMentulaRoute.cs"/>
+        <Compile Include="Coitus\Part\CoitusScaleLinear.cs"/>
+        <Compile Include="Coitus\Part\CoitusVaginaPart.cs"/>
+        <Compile Include="Coitus\Part\CoitusVaginaRoute.cs"/>
+        <Compile Include="Coitus\Part\CoitusVaginaPartSystem.cs"/>
+        <Compile Include="Coitus\Part\CoitusVaginaScaleLinear.cs"/>
+        <Compile Include="Coitus\Part\CoitusUtility.cs"/>
         <Compile Include="Coitus\Part\FuckUtility.cs"/>
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
