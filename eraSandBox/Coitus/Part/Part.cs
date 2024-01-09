@@ -1,4 +1,6 @@
-﻿namespace eraSandBox.Coitus
+﻿using eraSandBox.Coitus;
+
+namespace eraSandBox.Coitus
 {
     [NeedDefInitialize]
     public class Part

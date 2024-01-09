@@ -48,7 +48,7 @@
         <Compile Include="Coitus\Part\CoitusAspect.cs" />
         <Compile Include="Coitus\Part\CoitusPartLinker.cs"/>
         <Compile Include="Coitus\Part\CoitusPartsRoute.cs"/>
-        <Compile Include="Coitus\Part\CoitusPartSystemTracker.cs"/>
+        <Compile Include="Coitus\Part\PartTracker.cs" />
         <Compile Include="Coitus\Part\CoitusMentulaAspect.cs" />
         <Compile Include="Coitus\Part\CoitusMentulaRoute.cs"/>
         <Compile Include="Coitus\Part\CoitusScaleLinear.cs"/>
@@ -57,7 +57,10 @@
         <Compile Include="Coitus\Part\CoitusVaginaPartSystem.cs"/>
         <Compile Include="Coitus\Part\CoitusVaginaScaleLinear.cs"/>
         <Compile Include="Coitus\Part\CoitusUtility.cs"/>
-        <Compile Include="Coitus\Xml\GetXml.cs" />
+        <Compile Include="Coitus\XmlAssign\DefXml.cs" />
+        <Compile Include="Coitus\XmlAssign\GetXml.cs" />
+        <Compile Include="Coitus\XmlAssign\PawnBuilder.cs" />
+        <Compile Include="Coitus\XmlAssign\XmlUtility.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="TestPawn.cs"/>

@@ -1,22 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using eraSandBox.Coitus;
 
 namespace eraSandBox
 {
-    internal class Program
+    class Program
     {
-        //public static int times = 0;
-        public static Stopwatch cost = new Stopwatch();
-
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            // var b = new CoitusAspectDef();
-            // var a = XmlExtend.XmlSerialize<CoitusAspectDef>(b);
-            //
-            var a = new DefXml();
-            Console.WriteLine(a);
-            //Console.WriteLine($"程序耗时：{cost.ElapsedMilliseconds}ms.");
+            var a = new PawnBuilder.LinkXml();
+            var infoObjects = a.AssignRoute("人类") ?? throw new ArgumentNullException("a.AssignRoute(\"人类\")");
+            // 打印生成的info对象
+            foreach (PawnBuilder.LinkXml.PartInfo obj in infoObjects.Item1.Values)
+            {
+                Console.WriteLine($"Name: {obj.name}, LinkTo: {string.Join(",", obj.linkTo)}");
+            }
         }
     }
 }

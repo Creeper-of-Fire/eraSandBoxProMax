@@ -12,7 +12,7 @@ namespace eraSandBox.Coitus
         public readonly CoitusMentulaRouteLengthScale length;
         public CoitusVaginaRoute insert;
         public List<CoitusMentulaAspect> parts;
-        public CoitusPartTracker partTracker;
+        public PartTracker partTracker;
 
         public CoitusMentulaRoute()
         {

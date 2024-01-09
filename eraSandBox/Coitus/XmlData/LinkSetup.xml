@@ -2,21 +2,36 @@
 <!--
 这里只给予名字和连接方式
 -->
-<root>
+<assignAspect>
 	<species name="人类">
 		<vaginaRoute>
 			<part name="阴唇" isSurface="true"/>
 			<part name="外阴道"/>
 			<part name="内阴道"/>
+			<part name="子宫颈"/>
 			<part name="子宫"/>
 			<part name="输卵管"/>
 		</vaginaRoute>
-		<mentulaRoute>
-			<part name="阴唇"/>
-			<part name="外阴道"/>
-			<part name="内阴道"/>
+		<vaginaRoute>
 			<part name="子宫"/>
 			<part name="输卵管"/>
+			<part name="腹部体腔"/>
+			<part name="肚脐" isSurface="true"/>
+		</vaginaRoute>
+		<vaginaRoute>
+			<part name="子宫"/>
+			<part name="腹部体腔"/>
+			<part name="胸腔"/>
+			<part name="肺部"/>
+			<part name="主气管"/>
+			<part name="喉咙"/>
+			<part name="嘴巴"/>
+			<part name="嘴唇" isSurface="true"/>
+		</vaginaRoute>
+		<mentulaRoute>
+			<part name="睾丸"/>
+			<part name="阴茎"/>
+			<part name="龟头"/>
 		</mentulaRoute>
 	</species>
-</root>
+</assignAspect>

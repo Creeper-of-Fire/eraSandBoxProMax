@@ -1,4 +1,6 @@
-﻿namespace eraSandBox.Coitus
+﻿using eraSandBox.Coitus;
+
+namespace eraSandBox.Coitus
 {
     /// <summary> CoitusPart是关于Coitus内容的部件，包括人体也包括物品的可使用部分 </summary>
     [NeedDefInitialize]
