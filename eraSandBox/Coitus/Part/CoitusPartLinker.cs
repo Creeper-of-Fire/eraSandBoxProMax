@@ -1,9 +1,9 @@
-﻿namespace eraSandBox.Coitus.Part
+﻿namespace eraSandBox.Coitus
 {
     public class CoitusPartLinker
     {
-        public CoitusPart linkA;
-        public CoitusPart linkB;
+        public CoitusAspect linkA;
+        public CoitusAspect linkB;
         public CoitusVaginaScaleLinear DiameterMillimeter { get; }
         public float TransverseSizeLevel { get; set; }
     }

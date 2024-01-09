@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace eraSandBox.Coitus.Part
+﻿namespace eraSandBox.Coitus
 {
     public class CoitusPartTracker
     {
-        public List<CoitusPart> entranceCoitus;
-        public List<CoitusPart> surfaceCoitus;
-        public List<CoitusPart> totalCoitus;
+        public CoitusVaginaPartSystem coitusVaginaSystem;
+        public TestPawn owner;
 
-        public void ExposeData()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

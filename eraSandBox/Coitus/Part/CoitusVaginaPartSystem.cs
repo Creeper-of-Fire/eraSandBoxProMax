@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace eraSandBox.Coitus.Part
+namespace eraSandBox.Coitus
 {
     public class CoitusVaginaPartSystem
     {
@@ -12,7 +12,7 @@ namespace eraSandBox.Coitus.Part
 
         /// <summary> 在已生成所有线路的情况下，重新生成包含输入部件的路线 </summary>
         /// <param name="section"> 输入需要整理的部件 </param>
-        public void UpdateRoute(List<CoitusVaginaPart> section)
+        public void UpdateRoute(List<CoitusVaginaAspect> section)
         {
             var needUpdateRoutes = new List<CoitusVaginaRoute>();
             foreach (var part in section)
@@ -20,7 +20,7 @@ namespace eraSandBox.Coitus.Part
                 if (route.Contains(part))
                     needUpdateRoutes.Add(route);
 
-            var needUpdateRoutesStartPart = new List<CoitusVaginaPart>();
+            var needUpdateRoutesStartPart = new List<CoitusVaginaAspect>();
             foreach (var route in needUpdateRoutes)
             {
                 this.totalVaginaRoutes.Remove(route);
@@ -38,12 +38,12 @@ namespace eraSandBox.Coitus.Part
 
         /// <summary> 重新生成所有的可用插入路线 </summary>
         /// <param name="total"> 输入未整理的部件 </param>
-        public void TotalUpdateRoutes(List<CoitusVaginaPart> total)
+        public void TotalUpdateRoutes(List<CoitusVaginaAspect> total)
         {
-            var surfaceParts = new List<CoitusVaginaPart>();
+            var surfaceParts = new List<CoitusVaginaAspect>();
 
             foreach (var coitusSearchSurface in total)
-                if (coitusSearchSurface.coitusLinkType == CoitusVaginaPart.CoitusLinkType.Surface)
+                if (coitusSearchSurface.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Surface)
                     surfaceParts.Add(coitusSearchSurface);
             //选取起点（这步有一点多余，但是性能消耗很小，所以就无所谓了）
 

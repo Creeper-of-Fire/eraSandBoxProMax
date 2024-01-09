@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus.Fuck;
+using eraSandBox.Coitus;
 
-namespace eraSandBox.Coitus.Part
+namespace eraSandBox.Coitus
 {
     public interface IVaginaScale : IScale
     {
@@ -24,6 +24,7 @@ namespace eraSandBox.Coitus.Part
     // {
     //     public IEnumerable<IVaginaScale> subScales { get; }
     // }
+
 
     public interface IScale
     {
@@ -115,5 +116,27 @@ namespace eraSandBox.Coitus.Part
 
         public static int ToUnComfortMillimeter(this IVaginaScale vaginaScale) =>
             vaginaScale.UnComfortMillimeter() - vaginaScale.ComfortMillimeter();
+
+        /// <summary> 结构作为节点的类型 </summary>
+        public enum CoitusLinkType
+        {
+            /// <summary> 暂未赋值 </summary>
+            Null = 0,
+
+            /// <summary> 腔道的底部 </summary>
+            End = 1,
+
+            /// <summary> 腔道的入口 </summary>
+            Entrance = 2,
+
+            /// <summary> 通道部分 </summary>
+            Corridor = 3,
+
+            /// <summary> 表面 </summary>
+            Surface = 4,
+
+            /// <summary> 标志“未启用”的状态 </summary>
+            Hidden = 5
+        }
     }
 }

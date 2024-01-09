@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus.Fuck;
+using eraSandBox.Coitus;
 
-namespace eraSandBox.Coitus.Part
+namespace eraSandBox.Coitus
 {
     /// <summary> </summary>
     public class CoitusMentulaRoute : ICloneable
@@ -11,8 +11,8 @@ namespace eraSandBox.Coitus.Part
         public readonly CoitusMentulaRouteDiameterScale diameter;
         public readonly CoitusMentulaRouteLengthScale length;
         public CoitusVaginaRoute insert;
-        public List<CoitusMentulaPart> parts;
-        public TestPawn pawn;
+        public List<CoitusMentulaAspect> parts;
+        public CoitusPartTracker partTracker;
 
         public CoitusMentulaRoute()
         {
@@ -28,14 +28,14 @@ namespace eraSandBox.Coitus.Part
                 parts = this.parts.ToArray().ToList()
             };
 
-        public void Add(CoitusMentulaPart part)
+        public void Add(CoitusMentulaAspect aspect)
         {
-            this.parts.Add(part);
+            this.parts.Add(aspect);
         }
 
         public CoitusVaginaRoute ChooseVagina()
         {
-            var routes = this.pawn.system.totalVaginaRoutes;
+            var routes = this.partTracker.coitusVaginaSystem.totalVaginaRoutes;
             var r = new Random();
             return routes.ElementAt(r.Next(routes.Count));
         }
@@ -46,8 +46,8 @@ namespace eraSandBox.Coitus.Part
             FuckUtility.FuckBetweenRoute(vaginaRoute.length, this.length);
         }
 
-        public bool Contains(CoitusMentulaPart part) =>
-            this.parts.Contains(part);
+        public bool Contains(CoitusMentulaAspect aspect) =>
+            this.parts.Contains(aspect);
     }
 
     public abstract class CoitusMentulaRouteScale

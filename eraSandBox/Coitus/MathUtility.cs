@@ -5,17 +5,6 @@ namespace eraSandBox.Coitus
 {
     public static class MathUtility
     {
-        public enum Comparing
-        {
-            ThisBigger = 1,
-            FirstBigger = 1,
-            LastSmaller = 1,
-            Equal = 0,
-            FirstSmaller = -1,
-            ThisSmaller = -1,
-            LastBigger = -1
-        }
-
         public static bool SameSign(int a, int b) =>
             (a ^ b) > 0;
 
@@ -31,5 +20,16 @@ namespace eraSandBox.Coitus
         /// <summary> 最后一项的序号 </summary>
         public static int LastIndex<T>(this List<T> list) =>
             list.Count - 1;
+
+        public enum Comparing
+        {
+            ThisBigger = 1,
+            FirstBigger = 1,
+            LastSmaller = 1,
+            Equal = 0,
+            FirstSmaller = -1,
+            ThisSmaller = -1,
+            LastBigger = -1
+        }
     }
 }

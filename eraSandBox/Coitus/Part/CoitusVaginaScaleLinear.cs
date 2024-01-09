@@ -1,22 +1,11 @@
-﻿namespace eraSandBox.Coitus.Part
+﻿namespace eraSandBox.Coitus
 {
     public class CoitusVaginaScaleLinear : CoitusScaleLinear, IVaginaScale
     {
         private const float LevelToScale = 0.5f;
 
-        /// <param name="baseValueMillimeter">
-        /// <see cref="CoitusScaleLinear.baseValueMillimeter" />
-        /// </param>
-        /// <param name="scaleLevel">
-        /// <see cref="CoitusScaleLinear.scaleLevel" />
-        /// </param>
-        public CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel) : base(baseValueMillimeter,
-            scaleLevel)
-        {
-        }
-
-        private CoitusVaginaPart Parent =>
-            (CoitusVaginaPart)this.parent;
+        private CoitusVaginaAspect Parent =>
+            (CoitusVaginaAspect)this.parent;
 
         public MinusOneToOneRatio ExpansionOrContractionRatio { get; } = new MinusOneToOneRatio();
 
@@ -29,5 +18,9 @@
 
         public int UnComfortMillimeter() =>
             (int)(OriginalMillimeter() * this.Parent.elasticityLevel / LevelToScale);
+
+        public CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel) : base(baseValueMillimeter, scaleLevel)
+        {
+        }
     }
 }

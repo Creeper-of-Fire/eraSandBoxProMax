@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+这里只给予名字和连接方式
+-->
+<root>
+	<species name="人类">
+		<vaginaRoute>
+			<part name="阴唇" isSurface="true"/>
+			<part name="外阴道"/>
+			<part name="内阴道"/>
+			<part name="子宫"/>
+			<part name="输卵管"/>
+		</vaginaRoute>
+		<mentulaRoute>
+			<part name="阴唇"/>
+			<part name="外阴道"/>
+			<part name="内阴道"/>
+			<part name="子宫"/>
+			<part name="输卵管"/>
+		</mentulaRoute>
+	</species>
+</root>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace eraSandBox.Coitus.Part
+namespace eraSandBox.Coitus
 {
     /// <summary> 一条路线必定以Surface开始，以End或者Surface结束
     /// <para> 实际上这才是和Mentula交互的真正部分：由CoitusVaginaPartSystem将CoitusVaginaPart的链接网络进行分解，最后所生成的路线 </para>
@@ -13,7 +13,7 @@ namespace eraSandBox.Coitus.Part
         public readonly CoitusVaginaRouteLengthScale length;
         public TestPawn owner;
 
-        public List<CoitusVaginaPart> parts;
+        public List<CoitusVaginaAspect> parts;
 
         /// <summary> 构造函数是private，因为真正的创造一个Route需要使用<see cref="GetRoutes" /> </summary>
         private CoitusVaginaRoute()
@@ -34,9 +34,9 @@ namespace eraSandBox.Coitus.Part
         {
         }
 
-        private void Add(CoitusVaginaPart part)
+        private void Add(CoitusVaginaAspect aspect)
         {
-            this.parts.Add(part);
+            this.parts.Add(aspect);
         }
 
         /// <summary> 比较两个路线是否一致 </summary>
@@ -45,31 +45,31 @@ namespace eraSandBox.Coitus.Part
             !(this.parts.Count == vaginaRoute.parts.Count &&
               this.parts.All(vaginaRoute.parts.Contains));
 
-        public bool Contains(CoitusVaginaPart part) =>
-            this.parts.Contains(part);
+        public bool Contains(CoitusVaginaAspect aspect) =>
+            this.parts.Contains(aspect);
 
         [Obsolete]
-        public List<CoitusVaginaPart> GetEntrances()
+        public List<CoitusVaginaAspect> GetEntrances()
         {
             //First一定是出口，不需要检测
             if (HasTwoDirection())
-                return new List<CoitusVaginaPart> { this.parts.First(), this.parts.Last() };
+                return new List<CoitusVaginaAspect> { this.parts.First(), this.parts.Last() };
 
-            return new List<CoitusVaginaPart> { this.parts.First() };
+            return new List<CoitusVaginaAspect> { this.parts.First() };
         }
 
-        public CoitusVaginaPart GetEntrance() =>
+        public CoitusVaginaAspect GetEntrance() =>
             this.parts.First();
 
         //可优化：存储得到结果（一个route是否为是固定的，如果要修改则会使用重新生成的方法）
-        /// <summary> 是否两头都是入口 <see cref="CoitusVaginaPart.CoitusLinkType.Entrance" /> </summary>
+        /// <summary> 是否两头都是入口 <see cref="CoitusVaginaAspect.CoitusLinkType.Entrance" /> </summary>
         public bool HasTwoDirection() =>
-            this.parts.Last().coitusLinkType == CoitusVaginaPart.CoitusLinkType.Entrance;
+            this.parts.Last().coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance;
 
         /// <summary> 由给予的入口，获得这些入口对应的所有路线（两端皆为入口的会计算两次） </summary>
         /// <param name="entranceParts"> 入口 </param>
         /// <returns> 入口可产生的路线（两端皆为入口的会计算两次） </returns>
-        public static List<CoitusVaginaRoute> GetRoutes(List<CoitusVaginaPart> entranceParts)
+        public static List<CoitusVaginaRoute> GetRoutes(List<CoitusVaginaAspect> entranceParts)
         {
             var totalRoutes = new List<CoitusVaginaRoute>();
             foreach (var startPart in entranceParts)
@@ -79,10 +79,10 @@ namespace eraSandBox.Coitus.Part
                 CheckThisPart(startPart, route);
                 continue;
 
-                void CheckThisPart(CoitusVaginaPart nowPart, CoitusVaginaRoute nowRoute)
+                void CheckThisPart(CoitusVaginaAspect nowPart, CoitusVaginaRoute nowRoute)
                 {
-                    if (nowPart.coitusLinkType == CoitusVaginaPart.CoitusLinkType.End ||
-                        nowPart.coitusLinkType == CoitusVaginaPart.CoitusLinkType.Entrance)
+                    if (nowPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.End ||
+                        nowPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance)
                         //如果到了末端，则返回
                     {
                         nowRoute.Add(nowPart);
@@ -126,22 +126,22 @@ namespace eraSandBox.Coitus.Part
         /// <summary> 存储原始的数据值 </summary>
         public int OriginalMillimeter()
         {
-            return this.parent.parts.Sum(part => part.Length.OriginalMillimeter());
+            return this.parent.parts.Sum(part => part.length.OriginalMillimeter());
         }
 
         public int PerceptMillimeter()
         {
-            return this.parent.parts.Sum(part => part.Length.PerceptMillimeter());
+            return this.parent.parts.Sum(part => part.length.PerceptMillimeter());
         }
 
         public int ComfortMillimeter()
         {
-            return this.parent.parts.Sum(part => part.Length.ComfortMillimeter());
+            return this.parent.parts.Sum(part => part.length.ComfortMillimeter());
         }
 
         public int UnComfortMillimeter()
         {
-            return this.parent.parts.Sum(part => part.Length.UnComfortMillimeter());
+            return this.parent.parts.Sum(part => part.length.UnComfortMillimeter());
         }
     }
 
@@ -156,22 +156,22 @@ namespace eraSandBox.Coitus.Part
 
         public int OriginalMillimeter()
         {
-            return this.parent.parts.Select(part => part.Length.OriginalMillimeter()).Max();
+            return this.parent.parts.Select(part => part.length.OriginalMillimeter()).Max();
         }
 
         public int PerceptMillimeter()
         {
-            return this.parent.parts.Select(part => part.Diameter.PerceptMillimeter()).Max();
+            return this.parent.parts.Select(part => part.diameter.PerceptMillimeter()).Max();
         }
 
         public int ComfortMillimeter()
         {
-            return this.parent.parts.Select(part => part.Diameter.ComfortMillimeter()).Max();
+            return this.parent.parts.Select(part => part.diameter.ComfortMillimeter()).Max();
         }
 
         public int UnComfortMillimeter()
         {
-            return this.parent.parts.Select(part => part.Diameter.UnComfortMillimeter()).Max();
+            return this.parent.parts.Select(part => part.diameter.UnComfortMillimeter()).Max();
         }
     }
 }

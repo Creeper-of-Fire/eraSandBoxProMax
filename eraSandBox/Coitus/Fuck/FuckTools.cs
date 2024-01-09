@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus.Part;
+using eraSandBox.Coitus;
 
-namespace eraSandBox.Coitus.Fuck
+namespace eraSandBox.Coitus
 {
     /// <summary> 所有关于Fuck的内容都放在这里 </summary>
     public static partial class FuckUtility
@@ -120,7 +120,7 @@ namespace eraSandBox.Coitus.Fuck
             });
 
             foreach (var part in vaginaRoute.parent.parts)
-                part.Length.ExpansionOrContractionRatio.Add(vaginaRoute.ExpansionOrContractionRatio
+                part.length.ExpansionOrContractionRatio.Add(vaginaRoute.ExpansionOrContractionRatio
                     .RatioMax());
 
             return fuckMode;
@@ -135,18 +135,18 @@ namespace eraSandBox.Coitus.Fuck
             CoitusVaginaRoute vaginaRoute,
             CoitusMentulaRoute mentulaRoute,
             bool reverse,
-            in HashSet<CoitusMentulaPart> fuckerPart
+            in HashSet<CoitusMentulaAspect> fuckerPart
         )
         {
-            IEnumerable<CoitusVaginaPart> vaginaIntervals = vaginaRoute.parts;
-            IEnumerable<CoitusMentulaPart> mentulaIntervals = mentulaRoute.parts;
+            IEnumerable<CoitusVaginaAspect> vaginaIntervals = vaginaRoute.parts;
+            IEnumerable<CoitusMentulaAspect> mentulaIntervals = mentulaRoute.parts;
             if (reverse)
             {
                 vaginaIntervals = vaginaIntervals.Reverse();
                 mentulaIntervals = mentulaIntervals.Reverse();
             }
 
-            //var Assignment = new Dictionary<CoitusMentulaPart, Dictionary<CoitusVaginaPart, int>>();
+            //var Assignment = new Dictionary<CoitusMentulaAspect, Dictionary<CoitusVaginaAspect, int>>();
             using var nowVaginaEnumerator = vaginaIntervals.GetEnumerator();
             using var nowMentulaEnumerator = mentulaIntervals.GetEnumerator();
             nowVaginaEnumerator.MoveNext();
@@ -168,7 +168,7 @@ namespace eraSandBox.Coitus.Fuck
                     throw new NullReferenceException();
                 if (nowMentula == null)
                     throw new NullReferenceException();
-                int newVaginaLength = nowVagina.Length.NowScaleMillimeter();
+                int newVaginaLength = nowVagina.length.NowScaleMillimeter();
                 int newMentulaLength = nowMentula.length.OriginalMillimeter();
 
                 int newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
@@ -208,7 +208,7 @@ namespace eraSandBox.Coitus.Fuck
                 }
             }
 
-            void Assignment(CoitusMentulaPart mentula, CoitusVaginaPart vagina, int scale)
+            void Assignment(CoitusMentulaAspect mentula, CoitusVaginaAspect vagina, int scale)
             {
                 nowMentula.insert.Add(nowVagina, scale);
             }
