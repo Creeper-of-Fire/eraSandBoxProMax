@@ -1,0 +1,6 @@
+D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\bin\Debug\eraSandBox.exe
+D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\bin\Debug\eraSandBox.pdb
+D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.csproj.AssemblyReference.cache
+D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.csproj.CoreCompileInputs.cache
+D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.exe
+D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.pdb

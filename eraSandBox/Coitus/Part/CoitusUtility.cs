@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eraSandBox.Coitus.Fuck;
 
 namespace eraSandBox.Coitus.Part
 {
-    public interface IVaginaScale
+    public interface IVaginaScale : IScale
     {
-        public MinusOneToOneRatio expansionOrContractionRatio { get; }
-        public int OriginalMillimeter();
+        public MinusOneToOneRatio ExpansionOrContractionRatio { get; }
         public int PerceptMillimeter();
 
         public int ComfortMillimeter();
@@ -15,76 +15,91 @@ namespace eraSandBox.Coitus.Part
         public int UnComfortMillimeter();
     }
 
+    // public interface ISummableMentulaRouteScale : IScale
+    // {
+    //     public IEnumerable<IScale> subScales { get; }
+    // }
+    //
+    // public interface ISummableVaginaRouteScale : IVaginaScale
+    // {
+    //     public IEnumerable<IVaginaScale> subScales { get; }
+    // }
+
+    public interface IScale
+    {
+        public int OriginalMillimeter();
+    }
+
     public class MinusOneToOneRatio
     {
-        private readonly List<float> ratioList = new List<float>();
+        private readonly List<float> _ratioList = new List<float>();
 
         /// <summary> 只会不断增加，大的覆盖小的 </summary>
-        private float ratioMax = -1;
+        private float _ratioMax = -1;
 
         /// <summary> 只会不断增加，大的覆盖小的 </summary>
         public float RatioMax() =>
-            this.ratioMax;
+            this._ratioMax;
 
         private void UpdateRatioMax()
         {
-            this.ratioMax = this.ratioList.Max();
+            this._ratioMax = this._ratioList.Max();
         }
 
         public void Add(float value)
         {
-            this.ratioList.Add(value);
+            this._ratioList.Add(value);
             UpdateRatioMax();
         }
 
         public void Remove(float item)
         {
-            this.ratioList.Remove(item);
+            this._ratioList.Remove(item);
             UpdateRatioMax();
         }
 
         public void Clear()
         {
-            this.ratioList.Clear();
-            this.ratioMax = -1;
+            this._ratioList.Clear();
+            this._ratioMax = -1;
         }
 
 
         public static bool operator >=(MinusOneToOneRatio ratio, float item) =>
-            ratio.ratioMax >= item;
+            ratio._ratioMax >= item;
 
         public static bool operator <=(MinusOneToOneRatio ratio, float item) =>
-            ratio.ratioMax <= item;
+            ratio._ratioMax <= item;
 
         public static int operator *(int item, MinusOneToOneRatio ratio) =>
-            (int)(item * ratio.ratioMax);
+            (int)(item * ratio._ratioMax);
 
         public bool IsZero() =>
-            this.ratioMax == 0;
+            this._ratioMax == 0;
     }
 
     public static class CoitusUtility
     {
-        public const float ImPerceptRATIO = -1;
-        public const float UnComfortRATIO = 1;
+        public const float ImPerceptRatio = -1;
+        public const float UnComfortRatio = 1;
 
 
         public static int NowScaleMillimeter(this IVaginaScale vaginaScale)
         {
-            if (vaginaScale.expansionOrContractionRatio <= ImPerceptRATIO)
+            if (vaginaScale.ExpansionOrContractionRatio <= ImPerceptRatio)
                 return vaginaScale.PerceptMillimeter();
-            if (vaginaScale.expansionOrContractionRatio >= UnComfortRATIO)
+            if (vaginaScale.ExpansionOrContractionRatio >= UnComfortRatio)
                 return vaginaScale.UnComfortMillimeter();
-            if (vaginaScale.expansionOrContractionRatio.IsZero())
+            if (vaginaScale.ExpansionOrContractionRatio.IsZero())
                 return vaginaScale.OriginalMillimeter();
-            if (vaginaScale.expansionOrContractionRatio <= 0)
+            if (vaginaScale.ExpansionOrContractionRatio <= 0)
                 return vaginaScale.OriginalMillimeter() +
                        vaginaScale.ToPerceptMillimeter() *
-                       vaginaScale.expansionOrContractionRatio;
-            if (vaginaScale.expansionOrContractionRatio >= 0)
+                       vaginaScale.ExpansionOrContractionRatio;
+            if (vaginaScale.ExpansionOrContractionRatio >= 0)
                 return vaginaScale.OriginalMillimeter() +
                        vaginaScale.ToUnComfortMillimeter() *
-                       vaginaScale.expansionOrContractionRatio;
+                       vaginaScale.ExpansionOrContractionRatio;
             throw new InvalidOperationException();
         }
 

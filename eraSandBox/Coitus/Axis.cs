@@ -4,25 +4,109 @@ using System.Linq;
 
 namespace eraSandBox.Coitus
 {
+    /// <summary> 核心代码为：<see cref="AssignTwoAxis" />和<see cref="" /> </summary>
+    [Obsolete]
     public class Axis
     {
         protected List<Point> points = new List<Point>();
 
-        public int size =>
-            this.endPoint.x - this.startPoint.x;
+        public List<Point> Points =>
+            this.points;
 
-        public Point endPoint =>
+        public int Size =>
+            this.EndPoint.x - this.StartPoint.x;
+
+        public Point EndPoint =>
             this.points.Last();
 
-        public Point startPoint =>
+        public Point StartPoint =>
             this.points.First();
+
+        public static IEnumerable<Interval> PointsToIntervals(List<Point> points)
+        {
+            foreach (var point in points)
+            {
+                var nowIntervalBackground = new Interval(point.index, point, point.NextPoint());
+                yield return nowIntervalBackground;
+            }
+        }
+
+        public static Dictionary<Interval, Dictionary<int, int>> AssignmentMentulaForVagina(
+            List<Interval> vaginaIntervals,
+            List<Interval> mentulaIntervals
+        )
+        {
+            var assignment = new Dictionary<Interval, Dictionary<int, int>>();
+            foreach (var interval in vaginaIntervals)
+                assignment.Add(interval, new Dictionary<int, int>());
+
+            using var nowVaginaEnumerator = vaginaIntervals.GetEnumerator();
+            using var nowMentulaEnumerator = mentulaIntervals.GetEnumerator();
+            nowVaginaEnumerator.MoveNext();
+            nowMentulaEnumerator.MoveNext();
+            var nowVagina = nowVaginaEnumerator.Current;
+            var nowMentula = nowMentulaEnumerator.Current;
+            int oldVaginaLengthRemain = 0;
+            int oldMentulaLengthRemain = 0;
+            if (nowVagina == null)
+                throw new NullReferenceException();
+            if (nowMentula == null)
+                throw new NullReferenceException();
+
+            while (true)
+            {
+                nowVagina = nowVaginaEnumerator.Current;
+                nowMentula = nowMentulaEnumerator.Current;
+                if (nowVagina == null)
+                    throw new NullReferenceException();
+                if (nowMentula == null)
+                    throw new NullReferenceException();
+                int newVaginaLength = nowVagina.Length;
+                int newMentulaLength = nowMentula.Length;
+                int newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
+                int newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
+                switch ((MathUtility.Comparing)newMentulaLengthRemain.CompareTo(newVaginaLengthRemain))
+                {
+                    case MathUtility.Comparing.Equal:
+                        //nowMentulaLengthRemain == nowVaginaLengthRemain，刚刚好
+                        assignment[nowVagina].Add(nowMentula.index, newMentulaLengthRemain);
+                        oldVaginaLengthRemain = 0;
+                        oldMentulaLengthRemain = 0;
+                        if (!nowVaginaEnumerator.MoveNext())
+                            return assignment;
+                        if (!nowMentulaEnumerator.MoveNext())
+                            return assignment;
+                        break;
+                    case MathUtility.Comparing.LastBigger:
+                        //nowMentulaLengthRemain < nowVaginaLengthRemain，Vagina多出一大截
+                        assignment[nowVagina].Add(nowMentula.index, newMentulaLengthRemain);
+                        oldVaginaLengthRemain = newVaginaLengthRemain - newMentulaLength;
+                        //之前减去了newMentulaLengthRemain，所以实际上是：
+                        //“newVaginaLengthRemain - newMentulaLengthRemain + oldVaginaLengthRemain”
+                        oldMentulaLengthRemain = 0;
+                        if (!nowMentulaEnumerator.MoveNext())
+                            return assignment;
+                        break;
+                    case MathUtility.Comparing.FirstBigger:
+                        //nowMentulaLengthRemain > nowVaginaLengthRemain，Mentula多出一大截
+                        assignment[nowVagina].Add(nowMentula.index, newVaginaLengthRemain);
+                        oldVaginaLengthRemain = 0;
+                        oldMentulaLengthRemain = newMentulaLengthRemain - newVaginaLength;
+                        //之前减去了newVaginaLengthRemain，所以实际上是：
+                        //“newMentulaLengthRemain - newVaginaLengthRemain + oldMentulaLengthRemain”
+                        if (!nowVaginaEnumerator.MoveNext())
+                            return assignment;
+                        break;
+                }
+            }
+        }
 
         public void Append(int x)
         {
             this.points.Add(new Point(x, this));
         }
 
-        public void MakeAxis(List<int> distanceList)
+        public void MakeAxis(IEnumerable<int> distanceList)
         {
             int x = 0;
             Append(x);
@@ -48,6 +132,7 @@ namespace eraSandBox.Coitus
                 points = this.points.ToArray().ToList()
             };
 
+
         public static Axis operator +(Axis axis, int value)
         {
             return new Axis
@@ -56,7 +141,7 @@ namespace eraSandBox.Coitus
             };
         }
 
-        public static Axis operator *(Axis axis, int value)
+        public static Axis operator *(Axis axis, float value)
         {
             return new Axis
             {
@@ -64,124 +149,11 @@ namespace eraSandBox.Coitus
             };
         }
 
-        /// <summary> 一个点落在区间上，获得这个区间的左端点 </summary>
-        /// <returns> 序号：左端点
-        /// <para> 如果点在端点上，则点对应的区间为端点左边 </para>
-        /// 如果从左边落出Axis，则为-1；如果从右边落出Axis，则为<see cref="points" />的最大index </returns>
-        public int GetEndPoint(Point a, int index)
-        {
-            return this.points.FindLastIndex(index, point => point <= a);
-        }
-
-        /// <summary> 获得一个点所在的区间的序号 </summary>
-        /// <param name="point"> </param>
-        /// <returns> </returns>
-        public int GetIntervalIndex(Point point, int index = 0)
-        {
-            int startIndex = GetEndPoint(point, index);
-            if (this.points[startIndex] == point)
-                startIndex -= 1;
-
-            return startIndex;
-        }
-
-        /// <summery> A、B都处于各自的区间中，AB之间包住了几个端点 </summery>
-        /// <returns> (A所在区间序号，B所在区间序号，A到最近的包住的端点的距离，B到最近的包住的端点的距离) </returns>
-        public (int, int, int, int) GetIntervalInfo(Point pointA, Point pointB, int index = 0)
-        {
-            MakeSureASmallerThanB(ref pointA, ref pointB);
-            int startIndex = GetEndPoint(pointA, index);
-            int endIndex = GetEndPoint(pointB, index);
-            int distanceFirst = this.points[startIndex + 1] - pointA;
-            int distanceLast = pointB - this.points[endIndex];
-            return (startIndex, endIndex, distanceFirst, distanceLast);
-        }
-
-        public static int IntervalOverlapScale(Point pointA0, Point pointA1, Point pointB0, Point pointB1)
-        {
-            int scale = pointA0 > pointB0
-                ? pointB1 - pointA0
-                : pointA1 - pointB0;
-            return scale < 0 ? 0 : scale;
-        }
-
-        public int IntervalOverlapScale(int intervalIndexA, int intervalIndexB) =>
-            IntervalOverlapScale(
-                this.points[intervalIndexA],
-                this.points[intervalIndexA + 1],
-                this.points[intervalIndexB],
-                this.points[intervalIndexB + 1]);
-
-        private static void MakeSureASmallerThanB(ref Point a, ref Point b)
-        {
-            if (a > b)
-                (a, b) = (b, a);
-        }
-
-
-        /// <summary> 得到的结果不会被存储，所以需要直接使用 </summary>
-        /// <param name="axisFocus"> 初始点坐标可能不为0 </param>
-        /// <param name="axisBackground"> 初始点坐标必定为0 </param>
-        /// <returns> 结果是以<paramref name="axisBackground" />中的点为基础的 </returns>
-        public static Dictionary<Interval, Dictionary<IntervalInfo, int>> GetTwoAxisAssignment(
-            Axis axisFocus,
-            Axis axisBackground)
-        {
-            var intervals = AssignTwoAxis(axisFocus, axisBackground);
-            return intervals.ToDictionary(
-                interval => interval,
-                interval => interval.GetContainInfo());
-        }
-
-        /// <summary> 得到的结果不会被存储，所以需要直接使用 </summary>
-        /// <param name="axisFocus"> 初始点坐标可能不为0 </param>
-        /// <param name="axisBackground"> 初始点坐标必定为0 </param>
-        /// <returns> 结果是以<paramref name="axisBackground" />中的点为基础的 </returns>
-        protected static IEnumerable<Interval> AssignTwoAxis(Axis axisFocus, Axis axisBackground)
-        {
-            var points = new List<Point>();
-            points.AddRange(axisBackground.points);
-            points.AddRange(axisFocus.points);
-            points.Sort();
-            var intervals = new List<Interval>();
-            Interval nowInterval = null;
-            foreach (var nowPoint in points)
-            {
-                if (nowPoint.owner == axisBackground)
-                {
-                    var nextPoint = nowPoint.NextPoint();
-                    nowInterval = new Interval(nowPoint.index, nowPoint, nextPoint);
-                    intervals.Add(nowInterval);
-                }
-
-                if (nowInterval != null && nowPoint.owner != axisBackground)
-                    nowInterval.AddPoint(nowPoint);
-            }
-
-            intervals = intervals.Where(interval
-                => interval.length != 0 && interval.IsEmpty()
-            ).ToList();
-            return intervals;
-        }
-
-        // /// <summary> </summary>
-        // /// <param name="axisFocus"> 初始点坐标可能不为0 </param>
-        // /// <param name="axisBackground"> 初始点坐标必定为0 </param>
-        // public static void CompareAssignment(Axis axisFocusA, Axis axisFocusB, Axis axisBackground)
-        // {
-        //     int index = 0;
-        //     foreach (int point in axisFocus.points)
-        //     {
-        //         index++;
-        //         axisBackground.GetIntervalIndex(point, index);
-        //     }
-        // }
-
-        public class Point : IComparable<Point>
+        public class Point : IComparable<Point>, ICloneable
         {
             public readonly Axis owner;
+            public readonly int x;
             public int index;
-            public int x;
 
             public Point(int x, Axis owner)
             {
@@ -189,8 +161,26 @@ namespace eraSandBox.Coitus
                 this.owner = owner;
             }
 
-            public int CompareTo(Point other) =>
-                this.x.CompareTo(other.x);
+            public object Clone() =>
+                new Point(this.x, this.owner)
+                {
+                    index = this.index
+                };
+
+            public int CompareTo(Point other)
+            {
+                switch (this.x.CompareTo(other.x))
+                {
+                    case -1:
+                        return -1;
+                    case 1:
+                        return 1;
+                    default:
+                        if (this.owner.GetHashCode() != other.owner.GetHashCode())
+                            return 0;
+                        return this.index.CompareTo(other.index);
+                }
+            }
 
             /// <returns> 返回下一个；当为最后一个时，返回自身 </returns>
             public Point NextPoint() =>
@@ -201,16 +191,19 @@ namespace eraSandBox.Coitus
                 IsFirstInItsAxis() ? this : this.owner.points[this.index - 1];
 
             public bool IsLastInItsAxis() =>
-                this.index == this.owner.points.Count;
+                this.index == this.owner.points.LastIndex();
 
             public bool IsFirstInItsAxis() =>
-                0 == this.index;
+                this.index == 0;
 
             public static Point operator +(Point point, int value) =>
                 new Point(point.x + value, point.owner);
 
             public static Point operator *(Point point, int value) =>
                 new Point(point.x * value, point.owner);
+
+            public static Point operator *(Point point, float value) =>
+                new Point((int)(point.x * value), point.owner);
 
             public static int operator -(Point pointA, Point pointB) =>
                 pointA.x - pointB.x;
@@ -226,56 +219,32 @@ namespace eraSandBox.Coitus
 
             public static bool operator >(Point pointA, Point pointB) =>
                 pointA.x > pointB.x;
-        }
 
-        /// <summary>
-        /// 这是<see cref="Interval"/>的简洁版本，只包含关键信息
-        /// </summary>
-        public readonly struct IntervalInfo
-        {
-            public readonly int index;
-
-            public IntervalInfo(int index)
-            {
-                this.index = index;
-            }
-
-            public override int GetHashCode() =>
-                this.index;
+            public Point Clone(int xValue) =>
+                new Point(xValue, this.owner)
+                {
+                    index = this.index
+                };
         }
 
         /// <summary> 临时生成，用于保存区间的信息 </summary>
         public class Interval
         {
-            protected readonly List<Point> contain = new List<Point>();
-            protected readonly int index;
-            protected readonly Point start;
-            protected readonly Point end;
-
-            public Tuple<int, Point, Point> GetBuildInfo()
-            {
-                return new Tuple<int, Point, Point>(this.index, this.start, this.end);
-            }
-
-            protected Interval(Tuple<int, Point, Point> buildInfo) : this(
-                buildInfo.Item1,
-                buildInfo.Item2,
-                buildInfo.Item3)
-            {
-            }
+            public readonly List<Point> contain;
+            public readonly Point end;
+            public readonly int index;
+            public readonly Point start;
 
             public Interval(int index, Point start, Point end)
             {
+                this.contain = new List<Point>();
                 this.index = index;
                 this.start = start;
                 this.end = end;
             }
 
-            public int length =>
+            public int Length =>
                 this.end - this.start;
-
-            public bool IsEmpty() =>
-                this.contain.Count == 0;
 
             public void AddPoint(Point point)
             {
@@ -284,43 +253,6 @@ namespace eraSandBox.Coitus
 
             public override int GetHashCode() =>
                 this.index;
-
-            public Dictionary<IntervalInfo, int> GetContainInfo()
-            {
-                var containInfo = new Dictionary<IntervalInfo, int>();
-                int i = 0;
-                while (true)
-                {
-                    var nowPoint = this.contain[i];
-                    if (nowPoint.IsFirstInItsAxis())
-                        continue;
-                    var prevPoint = i == 0
-                        ? this.start
-                        : this.contain[i - 1];
-
-                    int intervalIndex = nowPoint.index;
-
-                    AppendInfo(intervalIndex, nowPoint - prevPoint);
-
-                    if (nowPoint.IsLastInItsAxis())
-                        break;
-
-                    if (i == this.contain.Count)
-                    {
-                        AppendInfo(intervalIndex, this.end - nowPoint);
-                        break;
-                    }
-
-                    i++;
-                }
-
-                return containInfo;
-
-                void AppendInfo(int intervalIndex, int lengthValue)
-                {
-                    containInfo.Add(new IntervalInfo(intervalIndex), lengthValue);
-                }
-            }
         }
     }
 
@@ -328,54 +260,66 @@ namespace eraSandBox.Coitus
     /// <para> <see cref="list" />的元素比<see cref="Axis.points" />少一个 </para>
     /// </summary>
     /// <typeparam name="T"> </typeparam>
+    [Obsolete]
     public class AxisWithList<T> : Axis
     {
-        private readonly List<T> list;
+        public readonly List<T> list;
 
         public AxisWithList(List<T> list)
         {
             this.list = list;
         }
 
-        public void Reserve()
+        public void Reverse()
         {
-            this.points = this.points.Select(point => this.startPoint + (this.endPoint - point)).ToList();
+            this.points = this.points.Select(point => this.StartPoint + (this.EndPoint - point)).ToList();
             this.list.Reverse();
         }
 
-        public static Dictionary<Interval<T>, Dictionary<IntervalInfo<T>, int>> GetTwoAxisAssignment(
-            AxisWithList<T> axisFocus, AxisWithList<T> axisBackground)
+        public static AxisWithList<T> operator +(AxisWithList<T> axis, int value)
         {
-            var baseIntervals = AssignTwoAxis(axisFocus, axisBackground);
-            var intervals = baseIntervals.Select(interval => new Interval<T>(interval, axisBackground.list));
-            return intervals.ToDictionary(
-                interval => interval,
-                interval => interval.GetContainInfo(axisBackground.list));
+            return new AxisWithList<T>(axis.list)
+            {
+                points = axis.points.Select(point => point + value).ToList()
+            };
         }
 
-
-        public class Interval<TRep> : Interval
+        public static AxisWithList<T> operator *(AxisWithList<T> axis, float value)
         {
-            public TRep represent;
-
-            public Dictionary<IntervalInfo<TRep>, int> GetContainInfo(IReadOnlyList<TRep> represents)
+            return new AxisWithList<T>(axis.list)
             {
-                var BaseContainInfo = base.GetContainInfo();
-                var containInfo = BaseContainInfo.ToDictionary(
-                    pair => new IntervalInfo<TRep>(pair.Key, represents),
-                    pair => pair.Value);
+                points = axis.points.Select(point => point * value).ToList()
+            };
+        }
 
-                return containInfo;
-            }
+        public readonly struct Interval<TRep>
+        {
+            private readonly Interval _baseInterval;
 
-            public Interval(Interval interval, TRep represent) : base(interval.GetBuildInfo())
+            public Point Start =>
+                this._baseInterval.start;
+
+            public Point End =>
+                this._baseInterval.start;
+
+            public int Index =>
+                this._baseInterval.index;
+
+            public List<Point> Contain =>
+                this._baseInterval.contain;
+
+            public readonly TRep represent;
+
+            public Interval(Interval interval, TRep represent)
             {
+                this._baseInterval = interval;
                 this.represent = represent;
             }
 
-            public Interval(Interval interval, IReadOnlyList<TRep> list) : base(interval.GetBuildInfo())
+            public Interval(Interval interval, IReadOnlyList<TRep> list)
             {
-                this.represent = list[this.index];
+                this._baseInterval = interval;
+                this.represent = list[interval.index];
             }
         }
 
@@ -384,15 +328,15 @@ namespace eraSandBox.Coitus
             public readonly int index;
             public readonly TRep represent;
 
-            public IntervalInfo(IntervalInfo intervalInfo, TRep represent)
+            public IntervalInfo(int index, TRep represent)
             {
-                this.index = intervalInfo.index;
+                this.index = index;
                 this.represent = represent;
             }
 
-            public IntervalInfo(IntervalInfo intervalInfo, IReadOnlyList<TRep> list)
+            public IntervalInfo(int index, IReadOnlyList<TRep> list)
             {
-                this.index = intervalInfo.index;
+                this.index = index;
                 this.represent = list[this.index];
             }
 
@@ -401,9 +345,10 @@ namespace eraSandBox.Coitus
         }
     }
 
-    public interface IWithAxis
+    [Obsolete]
+    public interface IWithAxis<T>
     {
-        public Axis baseAxis { get; }
+        public AxisWithList<T> BaseAxis { get; }
         public void MakeAxis();
     }
 }

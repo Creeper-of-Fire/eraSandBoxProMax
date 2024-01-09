@@ -7,6 +7,6 @@ namespace eraSandBox
         /// <summary> 单位：毫米 </summary>
         public int heightMillimeter;
 
-        public CoitusVaginaPartSystem System;
+        public CoitusVaginaPartSystem system;
     }
 }

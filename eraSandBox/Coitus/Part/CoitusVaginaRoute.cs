@@ -9,11 +9,11 @@ namespace eraSandBox.Coitus.Part
     /// </summary>
     public class CoitusVaginaRoute : ICloneable
     {
+        public readonly CoitusVaginaRouteDiameterScale diameter;
         public readonly CoitusVaginaRouteLengthScale length;
-        public IVaginaScale diameter;
-        public List<CoitusVaginaPart> parts;
+        public TestPawn owner;
 
-        public TestPawn pawn;
+        public List<CoitusVaginaPart> parts;
 
         /// <summary> 构造函数是private，因为真正的创造一个Route需要使用<see cref="GetRoutes" /> </summary>
         private CoitusVaginaRoute()
@@ -29,11 +29,6 @@ namespace eraSandBox.Coitus.Part
             {
                 parts = this.parts.ToArray().ToList()
             };
-
-        private void Initialize()
-        {
-            this.length.MakeAxis();
-        }
 
         public void GetCoitusVaginaPartInRange(CoitusMentulaRoute mentulaRoute, int pointFirst, int pointLast)
         {
@@ -81,17 +76,16 @@ namespace eraSandBox.Coitus.Part
             {
                 var route = new CoitusVaginaRoute();
                 route.Add(startPart);
-                checkThisPart(startPart, route);
+                CheckThisPart(startPart, route);
                 continue;
 
-                void checkThisPart(CoitusVaginaPart nowPart, CoitusVaginaRoute nowRoute)
+                void CheckThisPart(CoitusVaginaPart nowPart, CoitusVaginaRoute nowRoute)
                 {
                     if (nowPart.coitusLinkType == CoitusVaginaPart.CoitusLinkType.End ||
                         nowPart.coitusLinkType == CoitusVaginaPart.CoitusLinkType.Entrance)
                         //如果到了末端，则返回
                     {
                         nowRoute.Add(nowPart);
-                        nowRoute.Initialize();
                         totalRoutes.Add(nowRoute);
                         return;
                     }
@@ -102,7 +96,7 @@ namespace eraSandBox.Coitus.Part
                             continue;
                         var nextRoute = (CoitusVaginaRoute)nowRoute.Clone();
                         nextRoute.Add(nextPart);
-                        checkThisPart(nextPart, nextRoute);
+                        CheckThisPart(nextPart, nextRoute);
                     }
                 }
             }
@@ -111,78 +105,73 @@ namespace eraSandBox.Coitus.Part
         }
     }
 
-    public class CoitusVaginaRouteLengthScale : IVaginaScale, IWithAxis
+    public abstract class CoitusVaginaRouteScale
     {
-        private readonly CoitusVaginaRoute parent;
+        public readonly CoitusVaginaRoute parent;
 
-        public CoitusVaginaRouteLengthScale(CoitusVaginaRoute parent)
+        protected CoitusVaginaRouteScale(CoitusVaginaRoute parent)
         {
             this.parent = parent;
         }
+    }
 
-        public MinusOneToOneRatio expansionOrContractionRatio { get; } = new MinusOneToOneRatio();
+    public class CoitusVaginaRouteLengthScale : CoitusVaginaRouteScale, IVaginaScale
+    {
+        public CoitusVaginaRouteLengthScale(CoitusVaginaRoute parent) : base(parent)
+        {
+        }
+
+        public MinusOneToOneRatio ExpansionOrContractionRatio { get; } = new MinusOneToOneRatio();
 
         /// <summary> 存储原始的数据值 </summary>
         public int OriginalMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.OriginalMillimeter());
+            return this.parent.parts.Sum(part => part.Length.OriginalMillimeter());
         }
 
         public int PerceptMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.PerceptMillimeter());
+            return this.parent.parts.Sum(part => part.Length.PerceptMillimeter());
         }
 
         public int ComfortMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.ComfortMillimeter());
+            return this.parent.parts.Sum(part => part.Length.ComfortMillimeter());
         }
 
         public int UnComfortMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.UnComfortMillimeter());
-        }
-
-        public Axis baseAxis { get; } = new Axis();
-
-        public void MakeAxis()
-        {
-            this.baseAxis.MakeAxis(this.parent.parts.Select(
-                distance => distance.length.OriginalMillimeter()
-            ).ToList());
+            return this.parent.parts.Sum(part => part.Length.UnComfortMillimeter());
         }
     }
 
-    public class CoitusVaginaRouteDiameterScale : IVaginaScale
+    public class CoitusVaginaRouteDiameterScale : CoitusVaginaRouteScale, IVaginaScale
     {
-        private readonly CoitusVaginaRoute parent;
-        //TODO 没包括link
-
-        public CoitusVaginaRouteDiameterScale(CoitusVaginaRoute parent)
+        public CoitusVaginaRouteDiameterScale(CoitusVaginaRoute parent) : base(parent)
         {
-            this.parent = parent;
         }
+        //TODO 没包括link的Diameter
 
-        public MinusOneToOneRatio expansionOrContractionRatio { get; } = new MinusOneToOneRatio();
+        public MinusOneToOneRatio ExpansionOrContractionRatio { get; } = new MinusOneToOneRatio();
 
         public int OriginalMillimeter()
         {
-            return this.parent.parts.Select(part => part.length.OriginalMillimeter()).Max();
+            return this.parent.parts.Select(part => part.Length.OriginalMillimeter()).Max();
         }
 
         public int PerceptMillimeter()
         {
-            return this.parent.parts.Select(part => part.diameter.PerceptMillimeter()).Max();
+            return this.parent.parts.Select(part => part.Diameter.PerceptMillimeter()).Max();
         }
 
         public int ComfortMillimeter()
         {
-            return this.parent.parts.Select(part => part.diameter.ComfortMillimeter()).Max();
+            return this.parent.parts.Select(part => part.Diameter.ComfortMillimeter()).Max();
         }
 
         public int UnComfortMillimeter()
         {
-            return this.parent.parts.Select(part => part.diameter.UnComfortMillimeter()).Max();
+            return this.parent.parts.Select(part => part.Diameter.UnComfortMillimeter()).Max();
         }
     }
 }

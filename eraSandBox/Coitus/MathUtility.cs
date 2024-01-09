@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace eraSandBox.Coitus
 {
@@ -26,5 +27,9 @@ namespace eraSandBox.Coitus
 
         public static Comparing CompareAbsTo(this float first, float last) =>
             (Comparing)Math.Abs(first).CompareTo(Math.Abs(last));
+
+        /// <summary> 最后一项的序号 </summary>
+        public static int LastIndex<T>(this List<T> list) =>
+            list.Count - 1;
     }
 }

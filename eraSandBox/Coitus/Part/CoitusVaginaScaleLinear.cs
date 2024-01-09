@@ -2,7 +2,7 @@
 {
     public class CoitusVaginaScaleLinear : CoitusScaleLinear, IVaginaScale
     {
-        private const float LEVELToSCALE = 0.5f;
+        private const float LevelToScale = 0.5f;
 
         /// <param name="baseValueMillimeter">
         /// <see cref="CoitusScaleLinear.baseValueMillimeter" />
@@ -18,20 +18,16 @@
         private CoitusVaginaPart Parent =>
             (CoitusVaginaPart)this.parent;
 
-        public MinusOneToOneRatio expansionOrContractionRatio { get; } = new MinusOneToOneRatio();
+        public MinusOneToOneRatio ExpansionOrContractionRatio { get; } = new MinusOneToOneRatio();
 
         public int PerceptMillimeter() =>
-            (int)(this.valueMillimeter / LEVELToSCALE / this.Parent.tighticityLevel);
+            (int)(OriginalMillimeter() / LevelToScale / this.Parent.tighticityLevel);
 
         /// <summary> 用于“结点”类型的计算 </summary>
         public int ComfortMillimeter() =>
             OriginalMillimeter();
 
         public int UnComfortMillimeter() =>
-            (int)(this.valueMillimeter * this.Parent.elasticityLevel / LEVELToSCALE);
-
-        /// <summary> 存储原始的数据值 </summary>
-        public int OriginalMillimeter() =>
-            this.valueMillimeter;
+            (int)(OriginalMillimeter() * this.Parent.elasticityLevel / LevelToScale);
     }
 }

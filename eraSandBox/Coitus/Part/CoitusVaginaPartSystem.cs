@@ -40,14 +40,14 @@ namespace eraSandBox.Coitus.Part
         /// <param name="total"> 输入未整理的部件 </param>
         public void TotalUpdateRoutes(List<CoitusVaginaPart> total)
         {
-            var SurfaceParts = new List<CoitusVaginaPart>();
+            var surfaceParts = new List<CoitusVaginaPart>();
 
             foreach (var coitusSearchSurface in total)
                 if (coitusSearchSurface.coitusLinkType == CoitusVaginaPart.CoitusLinkType.Surface)
-                    SurfaceParts.Add(coitusSearchSurface);
+                    surfaceParts.Add(coitusSearchSurface);
             //选取起点（这步有一点多余，但是性能消耗很小，所以就无所谓了）
 
-            var totalRoutes = CoitusVaginaRoute.GetRoutes(SurfaceParts);
+            var totalRoutes = CoitusVaginaRoute.GetRoutes(surfaceParts);
 
             this.totalVaginaRoutes = totalRoutes;
             //获得路径
