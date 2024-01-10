@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using eraSandBox.Coitus;
 
 namespace eraSandBox
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var a = new PawnBuilder.LinkXml();
-            var infoObjects = a.AssignRoute("人类") ?? throw new ArgumentNullException("a.AssignRoute(\"人类\")");
+            var infoObjectsA = LinkXml.AssignPartLink("人类");
+            var infoObjects = LinkXml.LinkInfoBothEnd.OrganizeConnection(infoObjectsA.Item1.Values);
             // 打印生成的info对象
-            foreach (PawnBuilder.LinkXml.PartInfo obj in infoObjects.Item1.Values)
-            {
-                Console.WriteLine($"Name: {obj.name}, LinkTo: {string.Join(",", obj.linkTo)}");
-            }
+            foreach (var obj in infoObjects)
+                Console.WriteLine(
+                    $"Name: {obj.name}, LinkTo: {string.Join(",", obj.linkTo.Select(pair => pair.Key.name.ToString() + ":" + pair.Value.startPoint + ',' + pair.Value.endPoint))}");
         }
     }
 }

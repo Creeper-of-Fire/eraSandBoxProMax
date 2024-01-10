@@ -7,9 +7,7 @@ namespace eraSandBox.Coitus
     {
         private readonly List<object> _defs = new List<object>();
 
-        /// <summary>
-        /// 全自动化调用xml
-        /// </summary>
+        /// <summary> 全自动化调用xml </summary>
         public DefXml() : base("Def")
         {
             LoadDef();
@@ -18,16 +16,12 @@ namespace eraSandBox.Coitus
         private void LoadDef()
         {
             foreach (XmlNode defNode in this.rootNode.ChildNodes)
-            {
                 //this._defs.Add(XmlUtility.DeSerializer(GetType().Namespace, defNode));
                 this._defs.Add(XmlUtility.DeSerializer(GetType().Namespace, defNode));
-            }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="defNeeder">被注入def的对象</param>
+        /// <summary> </summary>
+        /// <param name="defNeeder"> 被注入def的对象 </param>
         public void AssignDef(object defNeeder)
         {
             var defOfDefNeeder = defNeeder.GetType().GetField("def");

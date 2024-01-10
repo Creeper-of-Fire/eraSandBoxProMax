@@ -1,23 +1,22 @@
-﻿using eraSandBox.Coitus;
-
-namespace eraSandBox.Coitus
+﻿namespace eraSandBox.Coitus
 {
-    [NeedDefInitialize]
     public class Part
     {
         [NeedInitialize]
         public readonly string baseName;
-        [NeedDefInitialize]
+
+        public readonly TestPawn owner;
+
+        [NeedInitialize]
         public CoitusMentulaAspect mentulaAspect;
-        [NeedDefInitialize]
+
+        [NeedInitialize]
         public CoitusVaginaAspect vaginaAspect;
 
-        public TestPawn owner;
-
-        public Part(CoitusMentulaAspect mentulaAspect, CoitusVaginaAspect vaginaAspect)
+        public Part(TestPawn owner, string baseName)
         {
-            this.mentulaAspect = mentulaAspect;
-            this.vaginaAspect = vaginaAspect;
+            this.owner = owner;
+            this.baseName = baseName;
         }
     }
 }

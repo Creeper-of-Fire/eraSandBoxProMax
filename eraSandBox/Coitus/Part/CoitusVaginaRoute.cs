@@ -90,9 +90,9 @@ namespace eraSandBox.Coitus
                         return;
                     }
 
-                    foreach (var nextPart in nowPart.links)
+                    foreach (var nextPart in nowPart.Links)
                     {
-                        if (nowPart.links.Contains(nextPart))
+                        if (nowPart.Links.Contains(nextPart))
                             continue;
                         var nextRoute = (CoitusVaginaRoute)nowRoute.Clone();
                         nextRoute.Add(nextPart);

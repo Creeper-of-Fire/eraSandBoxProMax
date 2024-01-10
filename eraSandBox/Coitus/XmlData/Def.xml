@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 	<CoitusAspectDef>
-		<defName>114</defName>
+		<defName>Default</defName>
 		<lengthTenThousandth>0</lengthTenThousandth>
-		<ableToTransform>true</ableToTransform>
+		<isSurface>false</isSurface>
+		<ableToTransform>false</ableToTransform>
 		<diameterLevel>0</diameterLevel>
 		<lengthLevel>0</lengthLevel>
 		<elasticityLevel>0</elasticityLevel>

@@ -7,12 +7,10 @@ namespace eraSandBox.Coitus
 {
     public static class XmlUtility
     {
-        /// <summary>
-        /// 将xml反序列化为对象
-        /// </summary>
-        /// <param name="namespaceString"></param>
-        /// <param name="xml"></param>
-        /// <returns></returns>
+        /// <summary> 将xml反序列化为对象 </summary>
+        /// <param name="namespaceString"> </param>
+        /// <param name="xml"> </param>
+        /// <returns> </returns>
         // ReSharper disable once AssignNullToNotNullAttribute
         public static object DeSerializer(string namespaceString, XmlNode xml)
         {
@@ -22,7 +20,7 @@ namespace eraSandBox.Coitus
             var serializer = new XmlSerializer(t);
             return serializer.Deserialize(xmlNodeReader);
         }
-        
+
         public static object DeSerializer(Type type, XmlNode xml)
         {
             var xmlNodeReader = new XmlNodeReader(xml);
@@ -31,11 +29,9 @@ namespace eraSandBox.Coitus
             return serializer.Deserialize(xmlNodeReader);
         }
 
-        /// <summary>
-        /// 将实体对象转换成XML
-        /// </summary>
-        /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="obj">实体对象</param>
+        /// <summary> 将实体对象转换成XML </summary>
+        /// <typeparam name="T"> 实体类型 </typeparam>
+        /// <param name="obj"> 实体对象 </param>
         public static string XmlSerialize<T>(T obj)
         {
             try

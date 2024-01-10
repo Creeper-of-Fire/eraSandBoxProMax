@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus;
 
 namespace eraSandBox.Coitus
 {
@@ -11,12 +10,13 @@ namespace eraSandBox.Coitus
     [NeedDefInitialize]
     public class CoitusVaginaAspect : CoitusAspect
     {
-        public readonly List<CoitusVaginaAspect> links;
-        public CoitusLinkType coitusLinkType;
-        public CoitusMatterContainedData matterContain;
+        [NeedDefInitialize]
+        public CoitusLinkType coitusLinkType = CoitusLinkType.Null;
 
         [NeedDefInitialize]
         public int elasticityLevel;
+
+        public CoitusMatterContainedData matterContain;
 
         [NeedDefInitialize]
         public int plasticityLevel;
@@ -24,35 +24,11 @@ namespace eraSandBox.Coitus
         [NeedDefInitialize]
         public int tighticityLevel;
 
-
-        /// <summary> 初始化节点相邻信息 </summary>
-        /// <param name="pawn"> </param>
-        /// <param name="links"> </param>
-        /// <param name="coitusLinkType"> </param>
-        public CoitusVaginaAspect(
-            Part owner,
-            IEnumerable<CoitusVaginaAspect> links,
-            CoitusLinkType coitusLinkType = CoitusLinkType.Null) :
-            base(owner)
+        public CoitusVaginaAspect(Part owner) : base(owner)
         {
-            this.links = new List<CoitusVaginaAspect>(links);
-            this.coitusLinkType = coitusLinkType;
-            UpdateCoitusLinkType();
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-            this.elasticityLevel = this.def.elasticityLevel;
-            this.plasticityLevel = this.def.plasticityLevel;
-            this.tighticityLevel = this.def.tighticityLevel;
-            this.length =
-                new CoitusVaginaScaleLinear(CalculateBaseLength(owner.owner, this.def.lengthTenThousandth),
-                    this.lengthLevel);
-            this.diameter =
-                new CoitusVaginaScaleLinear(CalculateBaseDiameter(owner.owner, this.def.lengthTenThousandth),
-                    this.diameterLevel);
-        }
+        public List<CoitusVaginaAspect> Links { get; } = new List<CoitusVaginaAspect>();
 
         public new CoitusVaginaScaleLinear length
         {
@@ -64,6 +40,27 @@ namespace eraSandBox.Coitus
         {
             get => (CoitusVaginaScaleLinear)base.diameter;
             private set => base.diameter = value;
+        }
+
+        public void AddLinks(CoitusVaginaAspect coitusVaginaAspect)
+        {
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.elasticityLevel = this.def.elasticityLevel;
+            this.plasticityLevel = this.def.plasticityLevel;
+            this.tighticityLevel = this.def.tighticityLevel;
+            this.length =
+                new CoitusVaginaScaleLinear(CalculateBaseLength(this.owner.owner, this.def.lengthTenThousandth),
+                    this.lengthLevel);
+            this.diameter =
+                new CoitusVaginaScaleLinear(CalculateBaseDiameter(this.owner.owner, this.def.lengthTenThousandth),
+                    this.diameterLevel);
+            if (this.def.isSurface)
+                this.coitusLinkType = CoitusLinkType.Surface;
+            UpdateCoitusLinkType();
         }
 
 
@@ -83,11 +80,11 @@ namespace eraSandBox.Coitus
             {
                 if (this.coitusLinkType == CoitusLinkType.Surface)
                     return CoitusLinkType.Surface; //Surface比较特殊，是通过其他函数来设定的
-                if (this.links.Count == 0)
+                if (this.Links.Count == 0)
                     return CoitusLinkType.Hidden; //不与任何东西连接，则为隐藏
-                if (this.links.Count == 1)
+                if (this.Links.Count == 1)
                     return CoitusLinkType.End; //如果不是Surface又只有一个东西相连，则为底部
-                if (this.links.Any(link => link.coitusLinkType == CoitusLinkType.Surface))
+                if (this.Links.Any(link => link.coitusLinkType == CoitusLinkType.Surface))
                     return CoitusLinkType.Entrance; //如果和外部相连，则入口
                 return CoitusLinkType.Corridor; //其他情况
             }

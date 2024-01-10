@@ -4,6 +4,10 @@
     {
         private const float LevelToScale = 0.5f;
 
+        public CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel) : base(baseValueMillimeter, scaleLevel)
+        {
+        }
+
         private CoitusVaginaAspect Parent =>
             (CoitusVaginaAspect)this.parent;
 
@@ -18,9 +22,5 @@
 
         public int UnComfortMillimeter() =>
             (int)(OriginalMillimeter() * this.Parent.elasticityLevel / LevelToScale);
-
-        public CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel) : base(baseValueMillimeter, scaleLevel)
-        {
-        }
     }
 }

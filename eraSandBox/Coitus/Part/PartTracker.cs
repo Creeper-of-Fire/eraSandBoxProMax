@@ -4,8 +4,8 @@ namespace eraSandBox.Coitus
 {
     public class PartTracker
     {
-        public CoitusVaginaPartSystem coitusVaginaSystem = new CoitusVaginaPartSystem();
         public List<Part> allPart = new List<Part>();
+        public CoitusVaginaPartSystem coitusVaginaSystem = new CoitusVaginaPartSystem();
         public TestPawn owner;
 
         public PartTracker(TestPawn owner)
