@@ -13,7 +13,7 @@ namespace eraSandBox.Coitus
             where T0 : CoitusVaginaRouteScale, IVaginaScale
             where T1 : CoitusMentulaRouteScale, IScale
         {
-            var vaginaParts = vaginaScale.parent.parts;
+            var vaginaParts = vaginaScale.parent.PartLink;
             var mentulaParts = mentulaScale.parent.parts;
 
             var fuckMode = GetFuckModeAndExpansionOrContractionRatio(
@@ -29,7 +29,7 @@ namespace eraSandBox.Coitus
                 Fuck(part);
 
             if (fuckMode == FuckModeType.Destructive)
-                Destructive(vaginaParts.Last());
+                Destructive(vaginaParts.Last().value);
         }
 
         private static void Fuck(CoitusMentulaAspect aspect)

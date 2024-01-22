@@ -1,8 +1,11 @@
 ﻿// ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnassignedField.Global
 
+using System;
+
 namespace eraSandBox.Coitus
 {
+    [Serializable]
     public class CoitusAspectDef : Def
     {
         public bool ableToTransform;
@@ -23,6 +26,7 @@ namespace eraSandBox.Coitus
         public int tighticityLevel;
     }
 
+    [Serializable]
     public class Def
     {
         public string defName;

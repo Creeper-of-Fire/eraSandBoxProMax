@@ -31,26 +31,26 @@ namespace eraSandBox.Coitus
             if (templateNode == null)
                 return (null, null);
 
-            var vaginaRoutes = new List<XmlElement>();
-            var mentulaRoutes = new List<XmlElement>();
+            var vaginaLinks = new List<XmlElement>();
+            var mentulaLinks = new List<XmlElement>();
             //speciesNode位于<template name="xxx">
 
             foreach (XmlElement node in templateNode.ChildNodes)
                 switch (node.Name)
                 {
-                    case "vaginaRoute":
-                        vaginaRoutes.Add(node);
+                    case "vaginaLink":
+                        vaginaLinks.Add(node);
                         break;
-                    case "mentulaRoute":
-                        mentulaRoutes.Add(node);
+                    case "mentulaLink":
+                        mentulaLinks.Add(node);
                         break;
                 }
             //此时两个list之中为<vaginaRoute>、<mentulaRoute>
 
             var vaginaDict =
-                AssignLinkInfo(vaginaRoutes, nameGetter, linkByPointGetter);
+                AssignLinkInfo(vaginaLinks, nameGetter, linkByPointGetter);
             var mentulaDict =
-                AssignLinkInfo(mentulaRoutes, nameGetter, linkByPointGetter);
+                AssignLinkInfo(mentulaLinks, nameGetter, linkByPointGetter);
 
 
             return (vaginaDict, mentulaDict);
@@ -79,10 +79,11 @@ namespace eraSandBox.Coitus
             }
         }
 
-        /// <summary> 处理这样的连接情况：
-        /// <para> 一个列表有一系列带名字的对象，且它们以列表顺序互相前后连接 </para>
-        /// 有许多这样的列表 </summary>
-        /// <param name="species"> </param>
+        /// <summary>
+        ///     处理这样的连接情况：
+        ///     <para> 一个列表有一系列带名字的对象，且它们以列表顺序互相前后连接 </para>
+        ///     有许多这样的列表
+        /// </summary>
         /// <returns> </returns>
         private static Dictionary<string, LinkInfoWithStartPoint> AssignLinkInfo<T>(
             IReadOnlyCollection<IEnumerable> routes,
@@ -105,7 +106,7 @@ namespace eraSandBox.Coitus
         /// <param name="infoSet"> 一个集合，相当于建立了一个“名字-指针”的关系 </param>
         /// <param name="NameGetter"> </param>
         /// <param name="LinkByPointGetter"> </param>
-        /// <returns> 实际上和<paramref name="infoSet"> 完全一样，理论上可以把它重新返回回去，但是反正这里不需要考虑性能。 </returns>
+        /// <returns> 实际上和<paramref name="infoSet" /> 完全一样，理论上可以把它重新返回回去，但是反正这里不需要考虑性能。 </returns>
         private static Dictionary<string, LinkInfoWithStartPoint> AssignLinkInfo<T>(
             IEnumerable<IEnumerable> routes,
             IReadOnlyDictionary<string, LinkInfoWithStartPoint> infoSet,
@@ -163,19 +164,20 @@ namespace eraSandBox.Coitus
             return infoDict;
         }
 
+
         public class LinkInfoWithStartPoint
         {
+            public readonly string baseName;
+
             /// <summary> </summary>
-            /// <typeparam name="LinkInfo"> 连接到的其他节点 </typeparam>
+            /// <typeparam name="LinkInfoWithStartPoint"> 连接到的其他节点 </typeparam>
             /// <typeparam name="LinkStartPoint"> 本次连接的出发点 </typeparam>
             public readonly Dictionary<LinkInfoWithStartPoint, LinkStartPoint> linkTo;
 
-            public readonly string name;
-
-            public LinkInfoWithStartPoint(string name)
+            public LinkInfoWithStartPoint(string baseName)
             {
                 this.linkTo = new Dictionary<LinkInfoWithStartPoint, LinkStartPoint>();
-                this.name = name;
+                this.baseName = baseName;
             }
 
             public void AssignLinkToInfo(LinkInfoWithStartPoint linkInfoOfOther, LinkStartPoint newStartPoint)
@@ -196,11 +198,11 @@ namespace eraSandBox.Coitus
                 switch (oldStartPoint.isBlank, newStartPoint.isBlank)
                 {
                     case (true, true) when oldStartPoint.percentage != newStartPoint.percentage:
-                        throw new SystemException(string.Join("", this.name, "与", linkInfoOfOther.name, "之间的存在冲突：",
+                        throw new SystemException(string.Join("", this.baseName, "与", linkInfoOfOther.baseName, "之间的存在冲突：",
                             newStartPoint, "与", oldStartPoint, "均为空白，但",
                             newStartPoint.percentage, "不等于", oldStartPoint.percentage));
                     case (false, false) when oldStartPoint.percentage != newStartPoint.percentage:
-                        throw new SystemException(string.Join("", this.name, "与", linkInfoOfOther.name, "之间的存在冲突：",
+                        throw new SystemException(string.Join("", this.baseName, "与", linkInfoOfOther.baseName, "之间的存在冲突：",
                             newStartPoint, "与", oldStartPoint, "均不为空白，但",
                             newStartPoint.percentage, "不等于", oldStartPoint.percentage));
                     case (true, false):
@@ -218,7 +220,7 @@ namespace eraSandBox.Coitus
 
                 private const int End = 100;
 
-                /// <summary> 连接点位置的百分比信息，0在头，100在尾 </summary>
+                /// <summary> 连接出发点位置的百分比信息（例如，从A出发连接到B，这个点是位于A上的），0在头，100在尾 </summary>
                 public readonly int percentage;
 
                 public readonly bool isBlank;

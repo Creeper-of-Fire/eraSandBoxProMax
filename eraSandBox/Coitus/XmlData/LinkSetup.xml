@@ -3,35 +3,41 @@
 这里只给予名字和连接方式
 -->
 <assignAspect>
-	<template name="人类">
-		<vaginaRoute>
-			<part name="阴唇"/>
-			<part name="外阴道"/>
-			<part name="内阴道"/>
-			<part name="子宫颈"/>
-			<part name="子宫"/>
-			<part name="输卵管"/>
-		</vaginaRoute>
-		<vaginaRoute>
-			<part name="子宫"/>
-			<part name="输卵管"/>
-			<part name="腹部体腔" linkBy=",50"/>
-			<part name="肚脐"/>
-		</vaginaRoute>
-		<vaginaRoute>
-			<part name="子宫"/>
-			<part name="腹部体腔"/>
-			<part name="胸腔"/>
-			<part name="肺部"/>
-			<part name="主气管"/>
-			<part name="喉咙"/>
-			<part name="嘴巴"/>
-			<part name="嘴唇"/>
-		</vaginaRoute>
-		<mentulaRoute>
-			<part name="睾丸"/>
-			<part name="阴茎"/>
-			<part name="龟头"/>
-		</mentulaRoute>
-	</template>
+    <template name="人类">
+        <vaginaLink>
+            <part name="会阴"/>
+            <part name="阴唇"/>
+        </vaginaLink>
+        <vaginaLink>
+            <part name="肚皮"/>
+            <part name="肚脐"/>
+        </vaginaLink>
+        <vaginaLink>
+            <part name="下面部"/>
+            <part name="嘴唇"/>
+        </vaginaLink>
+        <vaginaLink>
+            <part name="阴唇"/>
+            <part name="外阴道"/>
+            <part name="内阴道"/>
+            <part name="子宫颈"/>
+            <part name="子宫"/>
+        </vaginaLink>
+        <vaginaLink>
+            <part name="子宫"/>
+            <part name="输卵管"/>
+            <part name="腹部体腔" linkBy=",50"/>
+            <part name="肚脐"/>
+        </vaginaLink>
+        <vaginaLink>
+            <part name="子宫"/>
+            <part name="腹部体腔"/>
+            <part name="胸腔"/>
+        </vaginaLink>
+        <mentulaLink>
+            <part name="睾丸"/>
+            <part name="阴茎"/>
+            <part name="龟头"/>
+        </mentulaLink>
+    </template>
 </assignAspect>

@@ -8,12 +8,13 @@ namespace eraSandBox
         public int heightMillimeter;
 
         public PartTracker parts;
-        public string species;
+        public string template;
 
-        public TestPawn(int heightMillimeter = 170, string species = "人类")
+        public TestPawn(int heightMillimeter = 170, string template = "人类")
         {
             this.heightMillimeter = heightMillimeter;
-            this.species = species;
+            this.parts = new PartTracker(this);
+            this.template = template;
         }
     }
 }

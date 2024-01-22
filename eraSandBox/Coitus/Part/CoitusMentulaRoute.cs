@@ -34,7 +34,7 @@ namespace eraSandBox.Coitus
 
         public CoitusVaginaRoute ChooseVagina()
         {
-            var routes = this.partTracker.coitusVaginaSystem.totalVaginaRoutes;
+            var routes = this.partTracker.coitusVaginaSystem.TotalVaginaRoutes;
             var r = new Random();
             return routes.ElementAt(r.Next(routes.Count));
         }

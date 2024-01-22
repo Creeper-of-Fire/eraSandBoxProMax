@@ -4,8 +4,9 @@ using System.Linq;
 
 namespace eraSandBox.Coitus
 {
-    /// <summary> 一条路线必定以Surface开始，以End或者Surface结束
-    /// <para> 实际上这才是和Mentula交互的真正部分：由CoitusVaginaPartSystem将CoitusVaginaPart的链接网络进行分解，最后所生成的路线 </para>
+    /// <summary>
+    ///     一条路线必定以Surface开始，以End或者Surface结束
+    ///     <para> 实际上这才是和Mentula交互的真正部分：由CoitusVaginaPartSystem将CoitusVaginaPart的链接网络进行分解，最后所生成的路线 </para>
     /// </summary>
     public class CoitusVaginaRoute : ICloneable
     {
@@ -13,58 +14,79 @@ namespace eraSandBox.Coitus
         public readonly CoitusVaginaRouteLengthScale length;
         public TestPawn owner;
 
-        public List<CoitusVaginaAspect> parts;
+        public readonly struct CoitusVaginaRoutePiece
+        {
+            private const int DePercentage = 100;
+            public readonly CoitusVaginaAspect value;
+            public readonly LinkPoint<CoitusVaginaAspect> linkFrom;
+            public readonly LinkPoint<CoitusVaginaAspect> linkTo;
+            private string Name => this.value.baseName;
 
-        /// <summary> 构造函数是private，因为真正的创造一个Route需要使用<see cref="GetRoutes" /> </summary>
+            private int LengthPercentage =>
+                Math.Abs(this.linkFrom.GetPoint(this.value) - this.linkTo.GetPoint(this.value));
+
+            public float LengthRatio =>
+                (float)this.LengthPercentage / DePercentage;
+
+
+            public CoitusVaginaRoutePiece(CoitusVaginaAspect value, LinkPoint<CoitusVaginaAspect> linkFrom, LinkPoint<CoitusVaginaAspect> linkTo)
+            {
+                this.value = value;
+                this.linkFrom = linkFrom;
+                this.linkTo = linkTo;
+            }
+        }
+
+        public List<CoitusVaginaRoutePiece> PartLink { get; private set; } = new List<CoitusVaginaRoutePiece>();
+
+        public HashSet<CoitusVaginaAspect> AllParts =>
+            this.PartLink.Select(piece => piece.value).ToHashSet();
+
+        /// <summary> 真正的创造一个Route需要使用<see cref="GetRoutes" /> </summary>
         private CoitusVaginaRoute()
         {
             this.length = new CoitusVaginaRouteLengthScale(this);
             this.diameter = new CoitusVaginaRouteDiameterScale(this);
         }
 
-        /// <summary> 复制自身，只复制 <see cref="parts" /> 里的内容 </summary>
+        /// <summary> 复制自身，只复制 <see cref="PartLink" /> 里的内容 </summary>
         /// <returns> 自身的复制，类型为 <see cref="object" /> </returns>
         public object Clone() =>
             new CoitusVaginaRoute
             {
-                parts = this.parts.ToArray().ToList()
+                PartLink = this.PartLink.ToArray().ToList()
             };
 
         public void GetCoitusVaginaPartInRange(CoitusMentulaRoute mentulaRoute, int pointFirst, int pointLast)
         {
         }
 
-        private void Add(CoitusVaginaAspect aspect)
+        private void Add(CoitusVaginaAspect aspect, LinkPoint<CoitusVaginaAspect> linkFrom, LinkPoint<CoitusVaginaAspect> linkTo)
         {
-            this.parts.Add(aspect);
+            this.PartLink.Add(new CoitusVaginaRoutePiece(aspect, linkFrom, linkTo));
         }
 
         /// <summary> 比较两个路线是否一致 </summary>
         /// <param name="vaginaRoute"> 另一条路线 </param>
         public bool IsSame(CoitusVaginaRoute vaginaRoute) =>
-            !(this.parts.Count == vaginaRoute.parts.Count &&
-              this.parts.All(vaginaRoute.parts.Contains));
+            !(this.PartLink.Count == vaginaRoute.PartLink.Count &&
+              this.PartLink.All(vaginaRoute.PartLink.Contains));
 
-        public bool Contains(CoitusVaginaAspect aspect) =>
-            this.parts.Contains(aspect);
-
-        [Obsolete]
-        public List<CoitusVaginaAspect> GetEntrances()
+        private bool Contains(CoitusVaginaAspect aspect, LinkPoint<CoitusVaginaAspect> linkFrom)
         {
-            //First一定是出口，不需要检测
-            if (HasTwoDirection())
-                return new List<CoitusVaginaAspect> { this.parts.First(), this.parts.Last() };
-
-            return new List<CoitusVaginaAspect> { this.parts.First() };
+            return this.PartLink.Any(piece => piece.linkFrom == linkFrom && piece.value == aspect);
         }
 
+        public bool Contains(CoitusVaginaAspect aspect) =>
+            this.AllParts.Contains(aspect);
+
         public CoitusVaginaAspect GetEntrance() =>
-            this.parts.First();
+            this.PartLink.First().value;
 
         //可优化：存储得到结果（一个route是否为是固定的，如果要修改则会使用重新生成的方法）
         /// <summary> 是否两头都是入口 <see cref="CoitusVaginaAspect.CoitusLinkType.Entrance" /> </summary>
         public bool HasTwoDirection() =>
-            this.parts.Last().coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance;
+            this.PartLink.Last().value.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance;
 
         /// <summary> 由给予的入口，获得这些入口对应的所有路线（两端皆为入口的会计算两次） </summary>
         /// <param name="entranceParts"> 入口 </param>
@@ -75,33 +97,48 @@ namespace eraSandBox.Coitus
             foreach (var startPart in entranceParts)
             {
                 var route = new CoitusVaginaRoute();
-                route.Add(startPart);
-                CheckThisPart(startPart, route);
-                continue;
-
-                void CheckThisPart(CoitusVaginaAspect nowPart, CoitusVaginaRoute nowRoute)
-                {
-                    if (nowPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.End ||
-                        nowPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance)
-                        //如果到了末端，则返回
-                    {
-                        nowRoute.Add(nowPart);
-                        totalRoutes.Add(nowRoute);
-                        return;
-                    }
-
-                    foreach (var nextPart in nowPart.Links)
-                    {
-                        if (nowPart.Links.Contains(nextPart))
-                            continue;
-                        var nextRoute = (CoitusVaginaRoute)nowRoute.Clone();
-                        nextRoute.Add(nextPart);
-                        CheckThisPart(nextPart, nextRoute);
-                    }
-                }
+                CheckThisPart(startPart, null, route);
             }
 
             return totalRoutes;
+
+
+            //第n层递归：添加n层的piece，根据n层来生成n+1层
+            void CheckThisPart(
+                CoitusVaginaAspect nowPart,
+                LinkPoint<CoitusVaginaAspect> nowLinkFrom,
+                CoitusVaginaRoute nowRoute)
+            {
+                if (nowLinkFrom != null && (nowPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.End ||
+                                            nowPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance))
+                {
+                    //如果到了末端，则返回
+                    nowRoute.Add(nowPart, nowLinkFrom, null);
+                    totalRoutes.Add(nowRoute);
+                    return;
+                }
+
+                foreach (var nextPoint in nowPart.linkTo)
+                {
+                    var a = Enumerable.Concat(nowRoute.PartLink.Select(piece => piece.linkFrom), nowRoute.PartLink.Select(piece => piece.linkTo));
+                    if (a.Any(p => p != null && IsSame(p, nextPoint)))
+                        continue;
+                    var nextPart = nextPoint.GetOppositeObject(nowPart);
+                    if (nextPart.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Surface)
+                        continue;
+                    var nextRoute = (CoitusVaginaRoute)nowRoute.Clone();
+                    nextRoute.Add(nowPart, nowLinkFrom, nextPoint);
+                    CheckThisPart(nextPart, nextPoint, nextRoute);
+                }
+            }
+
+            bool IsSame(LinkPoint<CoitusVaginaAspect> a, LinkPoint<CoitusVaginaAspect> b)
+            {
+                return (a.objectA.baseName, a.objectB.baseName, a.pointAPercentage, a.pointBPercentage) ==
+                       (b.objectA.baseName, b.objectB.baseName, b.pointAPercentage, b.pointBPercentage) ||
+                       (a.objectA.baseName, a.objectB.baseName, a.pointAPercentage, a.pointBPercentage) ==
+                       (b.objectB.baseName, b.objectA.baseName, b.pointBPercentage, b.pointAPercentage);
+            }
         }
     }
 
@@ -126,22 +163,22 @@ namespace eraSandBox.Coitus
         /// <summary> 存储原始的数据值 </summary>
         public int OriginalMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.OriginalMillimeter());
+            return (int)this.parent.PartLink.Sum(part => part.value.length.OriginalMillimeter() * part.LengthRatio);
         }
 
         public int PerceptMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.PerceptMillimeter());
+            return (int)this.parent.PartLink.Sum(part => part.value.length.PerceptMillimeter() * part.LengthRatio);
         }
 
         public int ComfortMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.ComfortMillimeter());
+            return (int)this.parent.PartLink.Sum(part => part.value.length.ComfortMillimeter() * part.LengthRatio);
         }
 
         public int UnComfortMillimeter()
         {
-            return this.parent.parts.Sum(part => part.length.UnComfortMillimeter());
+            return (int)this.parent.PartLink.Sum(part => part.value.length.UnComfortMillimeter() * part.LengthRatio);
         }
     }
 
@@ -156,22 +193,22 @@ namespace eraSandBox.Coitus
 
         public int OriginalMillimeter()
         {
-            return this.parent.parts.Select(part => part.length.OriginalMillimeter()).Max();
+            return this.parent.PartLink.Select(part => part.value.length.OriginalMillimeter()).Max();
         }
 
         public int PerceptMillimeter()
         {
-            return this.parent.parts.Select(part => part.diameter.PerceptMillimeter()).Max();
+            return this.parent.PartLink.Select(part => part.value.diameter.PerceptMillimeter()).Max();
         }
 
         public int ComfortMillimeter()
         {
-            return this.parent.parts.Select(part => part.diameter.ComfortMillimeter()).Max();
+            return this.parent.PartLink.Select(part => part.value.diameter.ComfortMillimeter()).Max();
         }
 
         public int UnComfortMillimeter()
         {
-            return this.parent.parts.Select(part => part.diameter.UnComfortMillimeter()).Max();
+            return this.parent.PartLink.Select(part => part.value.diameter.UnComfortMillimeter()).Max();
         }
     }
 }

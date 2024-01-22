@@ -118,8 +118,8 @@ namespace eraSandBox.Coitus
                 _ => throw new ArgumentOutOfRangeException()
             });
 
-            foreach (var part in vaginaRoute.parent.parts)
-                part.length.ExpansionOrContractionRatio.Add(vaginaRoute.ExpansionOrContractionRatio
+            foreach (var part in vaginaRoute.parent.PartLink)
+                part.value.length.ExpansionOrContractionRatio.Add(vaginaRoute.ExpansionOrContractionRatio
                     .RatioMax());
 
             return fuckMode;
@@ -137,7 +137,7 @@ namespace eraSandBox.Coitus
             in HashSet<CoitusMentulaAspect> fuckerPart
         )
         {
-            IEnumerable<CoitusVaginaAspect> vaginaIntervals = vaginaRoute.parts;
+            IEnumerable<CoitusVaginaAspect> vaginaIntervals = vaginaRoute.PartLink.Select(piece => piece.value);
             IEnumerable<CoitusMentulaAspect> mentulaIntervals = mentulaRoute.parts;
             if (reverse)
             {

@@ -4,3 +4,9 @@ D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandB
 D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.csproj.CoreCompileInputs.cache
 D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.exe
 D:\creeper10\Desktop\Project\eraSandBox\eraSandBox\eraSandBox\obj\Debug\eraSandBox.pdb
+C:\Users\TT\Desktop\eraSandBoxProMax-master\eraSandBox\obj\Debug\eraSandBox.exe
+C:\Users\TT\Desktop\eraSandBoxProMax-master\eraSandBox\obj\Debug\eraSandBox.pdb
+C:\Users\TT\Desktop\eraSandBoxProMax-master\eraSandBox\bin\Debug\eraSandBox.exe
+C:\Users\TT\Desktop\eraSandBoxProMax-master\eraSandBox\bin\Debug\eraSandBox.pdb
+C:\Users\TT\Desktop\eraSandBoxProMax-master\eraSandBox\obj\Debug\eraSandBox.csproj.AssemblyReference.cache
+C:\Users\TT\Desktop\eraSandBoxProMax-master\eraSandBox\obj\Debug\eraSandBox.csproj.CoreCompileInputs.cache

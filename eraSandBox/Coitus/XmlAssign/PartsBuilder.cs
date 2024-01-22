@@ -11,109 +11,87 @@ namespace eraSandBox.Coitus
 
         public static PartsBuilder Instance { get; } = new PartsBuilder();
 
-        public void MakePawn()
-        {
-            var pawn = new TestPawn();
-        }
-
-        public void MakeParts(TestPawn owner, string template)
+        public static Dictionary<string, Part> MakeParts(TestPawn owner, string template)
         {
             var (vaginaInfos, mentulaInfos) = LinkXml.AssignPartLink(template);
             var partList = new Dictionary<string, Part>();
             var vaginaList = new List<CoitusVaginaAspect>();
             var mentulaList = new List<CoitusMentulaAspect>();
-            foreach (var vaginaInfo in vaginaInfos)
+            foreach (string baseName in vaginaInfos.Select(vaginaInfo => vaginaInfo.Key))
             {
-                string baseName = vaginaInfo.Key;
-                var part = partList.ContainsKey(baseName)
-                    ? new Part(owner, baseName)
-                    : partList[baseName];
+                var part = partList.TryGetValue(baseName, out var value)
+                    ? value
+                    : new Part(owner, baseName);
 
                 var vaginaAspect = new CoitusVaginaAspect(part);
+                DefXml.AssignDef(vaginaAspect, baseName);
                 part.vaginaAspect = vaginaAspect;
                 vaginaList.Add(vaginaAspect);
+                partList.AddAndSkip(part.baseName, part);
             }
 
-            foreach (var mentulaInfo in mentulaInfos)
+            foreach (string baseName in mentulaInfos.Select(mentulaInfo => mentulaInfo.Key))
             {
-                string baseName = mentulaInfo.Key;
-                var part = partList.ContainsKey(baseName)
-                    ? new Part(owner, baseName)
-                    : partList[baseName];
+                var part = partList.TryGetValue(baseName, out var value)
+                    ? value
+                    : new Part(owner, baseName);
 
                 var mentulaAspect = new CoitusMentulaAspect(part);
+                DefXml.AssignDef(mentulaAspect, baseName);
                 part.mentulaAspect = mentulaAspect;
                 mentulaList.Add(mentulaAspect);
+                partList.AddAndSkip(part.baseName, part);
             }
+
+            //此时，vagina和mentula已经连接完毕，但是还只是linkInfo状态
+            OrganizeConnection<CoitusAspect, LinkPoint<CoitusAspect>>(vaginaInfos.Values, vaginaList);
+            OrganizeConnection<CoitusAspect, LinkPoint<CoitusAspect>>(mentulaInfos.Values, mentulaList);
+
+            foreach (var aspect in vaginaList)
+            {
+                aspect.Initialize();
+            }
+
+            foreach (var aspect in mentulaList)
+            {
+                aspect.Initialize();
+            }
+
+            return partList;
         }
 
-        public class LinkInfoBothEnd<T>
+        private static void OrganizeConnection<L2, P2>(
+            IEnumerable<LinkXml.LinkInfoWithStartPoint> linkInfos,
+            IEnumerable<L2> nodesNeedLink)
+            where L2 : ILinkTo<L2>
+            where P2 : LinkPoint<L2>
         {
-            public readonly string name;
-
-            public readonly T represent;
-
-            public readonly Dictionary<LinkInfoBothEnd<T>, LinkPointBothEnd> linkTo =
-                new Dictionary<LinkInfoBothEnd<T>, LinkPointBothEnd>();
-
-            public LinkInfoBothEnd(string name, T represent)
+            var nodeMap =
+                linkInfos.ToDictionary(
+                    linkInfo => linkInfo,
+                    linkInfo => nodesNeedLink.First(nullLink => nullLink.baseName == linkInfo.baseName));
+            foreach (var thisSide in nodeMap.Keys)
             {
-                this.name = name;
-                this.represent = represent;
-            }
-
-            public void Add(LinkInfoBothEnd<T> linkInfo, LinkPointBothEnd point)
-            {
-                this.linkTo.AddAndCover(linkInfo, point);
-            }
-
-            public static IEnumerable<LinkInfoBothEnd<T>> OrganizeConnection(
-                IEnumerable<LinkXml.LinkInfoWithStartPoint> linkInfos,
-                IReadOnlyDictionary<string, T> representDict)
-            {
-                Dictionary<LinkXml.LinkInfoWithStartPoint, LinkInfoBothEnd<T>> nodeMap =
-                    linkInfos.ToDictionary(linkInfo => linkInfo,
-                        linkInfo => new LinkInfoBothEnd<T>(linkInfo.name, representDict[linkInfo.name]));
-                foreach (var thisSide in nodeMap.Keys)
+                foreach (var pair in thisSide.linkTo)
                 {
-                    foreach (var pair in thisSide.linkTo)
-                    {
-                        var thatSide = pair.Key;
-                        var newPoints = new LinkPointBothEnd
-                        (
-                            pair.Value.percentage,
-                            thatSide.linkTo.First(p => p.Key.name == thisSide.name).Value.percentage,
-                            nodeMap[thisSide],
-                            nodeMap[thatSide]
-                        );
-                        nodeMap[thisSide].Add(nodeMap[thatSide], newPoints);
+                    var thatSide = pair.Key;
+                    var newPoints = new LinkPoint<L2>
+                    (
+                        pair.Value.percentage,
+                        thatSide.linkTo.First(p => p.Key.baseName == thisSide.baseName).Value.percentage,
+                        nodeMap[thatSide],
+                        nodeMap[thisSide]
+                    );
+                    nodeMap[thisSide].linkTo.Add((P2)newPoints);
 
-                        var reversePoints = new LinkPointBothEnd(
-                            newPoints.endPoint,
-                            newPoints.startPoint,
-                            nodeMap[thatSide],
-                            nodeMap[thisSide]
-                        );
-                        nodeMap[thatSide].Add(nodeMap[thisSide], reversePoints);
-                    }
-                }
-
-                return nodeMap.Values;
-            }
-
-            public class LinkPointBothEnd
-            {
-                public readonly LinkInfoBothEnd<T> start;
-                public readonly LinkInfoBothEnd<T> end;
-                public readonly int startPoint;
-                public readonly int endPoint;
-
-                public LinkPointBothEnd(int startPoint, int endPoint, LinkInfoBothEnd<T> start, LinkInfoBothEnd<T> end)
-                {
-                    this.start = start;
-                    this.end = end;
-                    this.startPoint = startPoint;
-                    this.endPoint = endPoint;
+                    // var reversePoints = new LinkPoint<L2>
+                    // (
+                    //     newPoints.endPoint,
+                    //     newPoints.startPoint,
+                    //     newPoints.end,
+                    //     newPoints.start
+                    // );
+                    //nodeMap[thatSide].linkTo.Add((P2)newPoints);
                 }
             }
         }

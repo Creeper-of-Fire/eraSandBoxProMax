@@ -1,8 +1,10 @@
-﻿namespace eraSandBox.Coitus
+﻿using System.Collections.Generic;
+
+namespace eraSandBox.Coitus
 {
     /// <summary> CoitusPart是关于Coitus内容的部件，包括人体也包括物品的可使用部分 </summary>
     [NeedDefInitialize]
-    public abstract class CoitusAspect : INeedInitialize
+    public abstract class CoitusAspect : INeedInitialize, ILinkTo<CoitusAspect>
     {
         public const int TenThousand = 10000;
 
@@ -32,16 +34,20 @@
             this.owner = owner;
         }
 
+        public IList<LinkPoint<CoitusAspect>> linkTo { get; } = new List<LinkPoint<CoitusAspect>>();
+
+        public string baseName => this.def.defName;
+
         public virtual void Initialize()
         {
             this.diameterLevel = this.def.diameterLevel;
             this.lengthLevel = this.def.lengthLevel;
             this.length =
-                new CoitusVaginaScaleLinear(CalculateBaseLength(this.owner.owner, this.def.lengthTenThousandth),
-                    this.lengthLevel);
+                new CoitusScaleLinear(CalculateBaseLength(this.owner.owner, this.def.lengthTenThousandth),
+                    this.lengthLevel, this);
             this.diameter =
-                new CoitusVaginaScaleLinear(CalculateBaseDiameter(this.owner.owner, this.def.lengthTenThousandth),
-                    this.diameterLevel);
+                new CoitusScaleLinear(CalculateBaseDiameter(this.owner.owner, this.def.lengthTenThousandth),
+                    this.diameterLevel, this);
         }
 
         protected static int CalculateBaseLength(TestPawn pawn, int lengthTenThousandth) =>

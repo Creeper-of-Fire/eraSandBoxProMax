@@ -3,10 +3,10 @@
     public class CoitusVaginaScaleLinear : CoitusScaleLinear, IVaginaScale
     {
         private const float LevelToScale = 0.5f;
-
-        public CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel) : base(baseValueMillimeter, scaleLevel)
+        public CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel, CoitusAspect parent) : base(baseValueMillimeter, scaleLevel, parent)
         {
         }
+
 
         private CoitusVaginaAspect Parent =>
             (CoitusVaginaAspect)this.parent;
