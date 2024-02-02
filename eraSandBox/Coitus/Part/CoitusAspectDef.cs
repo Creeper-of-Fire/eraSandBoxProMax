@@ -3,32 +3,31 @@
 
 using System;
 
-namespace eraSandBox.Coitus
+namespace eraSandBox.Coitus.Part;
+
+[Serializable]
+public class CoitusAspectDef : Def
 {
-    [Serializable]
-    public class CoitusAspectDef : Def
-    {
-        public bool ableToTransform;
+    public bool ableToTransform;
 
-        public int diameterLevel;
+    public int diameterLevel;
 
-        public int elasticityLevel;
+    public int elasticityLevel;
 
-        public bool isSurface;
+    public bool isSurface;
 
-        public int lengthLevel;
+    public int lengthLevel;
 
-        /// <value> 每个CoitusPart都有不同的lengthTenThousandth，其数值由xml决定 </value>
-        public int lengthTenThousandth; //单位：万分之一;大概在10%(即1000)数量级，比较合适
+    /// <value> 每个CoitusPart都有不同的lengthTenThousandth，其数值由xml决定 </value>
+    public int lengthTenThousandth; //单位：万分之一;大概在10%(即1000)数量级，比较合适
 
-        public int plasticityLevel;
+    public int plasticityLevel;
 
-        public int tighticityLevel;
-    }
+    public int tighticityLevel;
+}
 
-    [Serializable]
-    public class Def
-    {
-        public string defName;
-    }
+[Serializable]
+public class Def
+{
+    public string defName;
 }

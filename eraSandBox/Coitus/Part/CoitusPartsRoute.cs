@@ -1,6 +1,5 @@
-﻿namespace eraSandBox.Coitus
+﻿namespace eraSandBox.Coitus.Part;
+
+public class CoitusPartsRoute
 {
-    public class CoitusPartsRoute
-    {
-    }
 }

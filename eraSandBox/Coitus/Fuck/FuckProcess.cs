@@ -1,62 +1,68 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using eraSandBox.Coitus.Part;
 
-namespace eraSandBox.Coitus
+namespace eraSandBox.Coitus;
+
+public static partial class FuckUtility
 {
-    public static partial class FuckUtility
+    public static void FuckIn(CoitusMentulaRoute mentulaRoute, CoitusVaginaRoute vaginaRoute)
     {
-        public static void FuckBetweenRoute<T0, T1>(
-            T0 vaginaScale,
-            T1 mentulaScale,
-            int mentulaInsertLength,
-            FuckAttitude fuckAttitude = FuckAttitude.ShouldComfort)
-            where T0 : CoitusVaginaRouteScale, IVaginaScale
-            where T1 : CoitusMentulaRouteScale, IScale
-        {
-            var vaginaParts = vaginaScale.parent.PartLink;
-            var mentulaParts = mentulaScale.parent.parts;
+        mentulaRoute.insert = vaginaRoute;
+        FuckBetweenRoute(vaginaRoute.length, mentulaRoute.length);
+    }
 
-            var fuckMode = GetFuckModeAndExpansionOrContractionRatio(
-                vaginaScale, mentulaInsertLength, fuckAttitude);
+    public static void FuckBetweenRoute<T0, T1>(
+        T0 vaginaScale,
+        T1 mentulaScale,
+        int mentulaInsertLength,
+        FuckAttitude fuckAttitude = FuckAttitude.ShouldComfort)
+        where T0 : CoitusVaginaRouteScale, IVaginaScale
+        where T1 : CoitusMentulaRouteScale, IScale
+    {
+        var vaginaParts = vaginaScale.parent.PartLink;
+        var mentulaParts = mentulaScale.parent.parts;
 
-            var fuckerPart = new HashSet<CoitusMentulaAspect>();
+        var fuckMode = GetFuckModeAndExpansionOrContractionRatio(
+            vaginaScale, mentulaInsertLength, fuckAttitude);
 
-            AssignVaginaForMentula(vaginaScale.parent, mentulaScale.parent,
-                fuckMode == FuckModeType.NotFullEntryComfortable || fuckMode == FuckModeType.NotFullEntryUnComfortable,
-                in fuckerPart);
+        var fuckerPart = new HashSet<CoitusMentulaAspect>();
 
-            foreach (var part in fuckerPart)
-                Fuck(part);
+        AssignVaginaForMentula(vaginaScale.parent, mentulaScale.parent,
+            fuckMode == FuckModeType.NotFullEntryComfortable || fuckMode == FuckModeType.NotFullEntryUnComfortable,
+            in fuckerPart);
 
-            if (fuckMode == FuckModeType.Destructive)
-                Destructive(vaginaParts.Last().value);
-        }
+        foreach (var part in fuckerPart)
+            Fuck(part);
 
-        private static void Fuck(CoitusMentulaAspect aspect)
-        {
-        }
+        if (fuckMode == FuckModeType.Destructive)
+            Destructive(vaginaParts.Last().value);
+    }
 
-        private static void Destructive(CoitusVaginaAspect aspect)
-        {
-        }
+    private static void Fuck(CoitusMentulaAspect aspect)
+    {
+    }
 
-        public static void FuckBetweenRoute<T0, T1>(
-            T0 vaginaRoute,
-            T1 mentulaRoute,
-            FuckAttitude fuckAttitude = FuckAttitude.ShouldComfort)
-            where T0 : CoitusVaginaRouteScale, IVaginaScale
-            where T1 : CoitusMentulaRouteScale, IScale
-        {
-            FuckBetweenRoute(vaginaRoute, mentulaRoute, mentulaRoute.OriginalMillimeter(), fuckAttitude);
-        }
+    private static void Destructive(CoitusVaginaAspect aspect)
+    {
+    }
 
-        public static void RemoveFuckRoute(
-            CoitusMentulaRoute mentulaRemoveRoute)
-        {
-            var mentulaParts = mentulaRemoveRoute.parts;
+    public static void FuckBetweenRoute<T0, T1>(
+        T0 vaginaRoute,
+        T1 mentulaRoute,
+        FuckAttitude fuckAttitude = FuckAttitude.ShouldComfort)
+        where T0 : CoitusVaginaRouteScale, IVaginaScale
+        where T1 : CoitusMentulaRouteScale, IScale
+    {
+        FuckBetweenRoute(vaginaRoute, mentulaRoute, mentulaRoute.OriginalMillimeter(), fuckAttitude);
+    }
 
-            foreach (var part in mentulaParts)
-                part.insert.Clear();
-        }
+    public static void RemoveFuckRoute(
+        CoitusMentulaRoute mentulaRemoveRoute)
+    {
+        var mentulaParts = mentulaRemoveRoute.parts;
+
+        foreach (var part in mentulaParts)
+            part.insert.Clear();
     }
 }

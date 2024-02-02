@@ -12,7 +12,7 @@
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <LangVersion>8</LangVersion>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,19 +43,20 @@
         <Compile Include="Coitus\Fuck\FuckProcess.cs"/>
         <Compile Include="Coitus\Fuck\FuckTools.cs"/>
         <Compile Include="Coitus\MathUtility.cs"/>
-        <Compile Include="Coitus\Part\CoitusAspectDef.cs"/>
-        <Compile Include="Coitus\Part\Part.cs"/>
-        <Compile Include="Coitus\Part\CoitusAspect.cs"/>
-        <Compile Include="Coitus\Part\CoitusPartsRoute.cs"/>
-        <Compile Include="Coitus\Part\PartTracker.cs"/>
-        <Compile Include="Coitus\Part\CoitusMentulaAspect.cs"/>
-        <Compile Include="Coitus\Part\CoitusMentulaRoute.cs"/>
-        <Compile Include="Coitus\Part\CoitusScaleLinear.cs"/>
-        <Compile Include="Coitus\Part\CoitusVaginaAspect.cs"/>
-        <Compile Include="Coitus\Part\CoitusVaginaRoute.cs"/>
-        <Compile Include="Coitus\Part\CoitusVaginaPartSystem.cs"/>
-        <Compile Include="Coitus\Part\CoitusVaginaScaleLinear.cs"/>
-        <Compile Include="Coitus\Part\CoitusUtility.cs"/>
+        <Compile Include="Coitus\Part\CoitusAspectDef.cs" />
+        <Compile Include="Coitus\Part\CoitusMentulaSystem.cs" />
+        <Compile Include="Coitus\Part\OrganPart.cs" />
+        <Compile Include="Coitus\Part\CoitusAspect.cs" />
+        <Compile Include="Coitus\Part\CoitusPartsRoute.cs" />
+        <Compile Include="Coitus\Part\PartSystem.cs" />
+        <Compile Include="Coitus\Part\CoitusMentulaAspect.cs" />
+        <Compile Include="Coitus\Part\CoitusMentulaRoute.cs" />
+        <Compile Include="Coitus\Part\CoitusScaleLinear.cs" />
+        <Compile Include="Coitus\Part\CoitusVaginaAspect.cs" />
+        <Compile Include="Coitus\Part\CoitusVaginaRoute.cs" />
+        <Compile Include="Coitus\Part\CoitusVaginaSystem.cs" />
+        <Compile Include="Coitus\Part\CoitusVaginaScaleLinear.cs" />
+        <Compile Include="Coitus\Part\CoitusUtility.cs" />
         <Compile Include="Coitus\XmlAssign\DataUtility.cs"/>
         <Compile Include="Coitus\XmlAssign\DefXml.cs"/>
         <Compile Include="Coitus\XmlAssign\GetXml.cs"/>
@@ -66,9 +67,6 @@
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="TestPawn.cs"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Coitus\Action\"/>
     </ItemGroup>
     <ItemGroup>
         <Content Include="Coitus\XmlData\Def.xml"/>
