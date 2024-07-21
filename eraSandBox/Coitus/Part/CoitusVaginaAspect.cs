@@ -63,7 +63,7 @@ public class CoitusVaginaAspect(OrganPart owner) : CoitusAspect(owner), ILinkTo<
             base.diameter = value;
     }
 
-    public new IList<LinkPoint<CoitusVaginaAspect>> linkTo
+    public new List<LinkPoint<CoitusVaginaAspect>> linkTo
     {
         get
         {

@@ -77,7 +77,7 @@ public interface ILinkTo<TSelf>
     /// <summary>
     ///     T:连向哪个，POINT：从哪里连的
     /// </summary>
-    public IList<LinkPoint<TSelf>> linkTo { get; }
+    public List<LinkPoint<TSelf>> linkTo { get; }
 }
 
 /// <summary>

@@ -43,6 +43,7 @@
         <Compile Include="Coitus\Fuck\FuckProcess.cs"/>
         <Compile Include="Coitus\Fuck\FuckTools.cs"/>
         <Compile Include="Coitus\MathUtility.cs"/>
+        <Compile Include="Coitus\PartsBuilder.cs" />
         <Compile Include="Coitus\Part\CoitusAspectDef.cs" />
         <Compile Include="Coitus\Part\CoitusMentulaSystem.cs" />
         <Compile Include="Coitus\Part\OrganPart.cs" />
@@ -57,16 +58,27 @@
         <Compile Include="Coitus\Part\CoitusVaginaSystem.cs" />
         <Compile Include="Coitus\Part\CoitusVaginaScaleLinear.cs" />
         <Compile Include="Coitus\Part\CoitusUtility.cs" />
-        <Compile Include="Coitus\XmlAssign\DataUtility.cs"/>
-        <Compile Include="Coitus\XmlAssign\DefXml.cs"/>
-        <Compile Include="Coitus\XmlAssign\GetXml.cs"/>
-        <Compile Include="Coitus\XmlAssign\LinkXml.cs"/>
-        <Compile Include="Coitus\XmlAssign\PartsBuilder.cs"/>
-        <Compile Include="Coitus\XmlAssign\PawnsBuilder.cs"/>
-        <Compile Include="Coitus\XmlAssign\XmlUtility.cs"/>
+        <Compile Include="Coitus\XmlAssign\DataUtility.cs" />
+        <Compile Include="Coitus\XmlAssign\DefXml.cs" />
+        <Compile Include="Coitus\XmlAssign\GetXml.cs" />
+        <Compile Include="Coitus\XmlAssign\LinkXml.cs" />
+        <Compile Include="Coitus\XmlAssign\XmlUtility.cs" />
+        <Compile Include="GameThing\IHasParts.cs" />
+        <Compile Include="GameThing\IHasScale.cs" />
+        <Compile Include="GameThing\ISaveAble.cs" />
+        <Compile Include="GameThing\IInCell.cs" />
+        <Compile Include="JosnData\AnimalData.cs" />
+        <Compile Include="Pawn\Animal.cs" />
+        <Compile Include="Pawn\CellThing.cs" />
+        <Compile Include="Pawn\WearThing.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="TestPawn.cs"/>
+        <Compile Include="Thought\MessageSpreader.cs" />
+        <Compile Include="Thought\MessageSystem.cs" />
+        <Compile Include="GameThing\IGameObject.cs" />
+        <Compile Include="World\Cell.cs" />
+        <Compile Include="World\SubWorld.cs" />
+        <Compile Include="World\TotalWorld.cs" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="Coitus\XmlData\Def.xml"/>

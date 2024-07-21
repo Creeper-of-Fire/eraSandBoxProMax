@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using eraSandBox.Coitus.Part;
+using eraSandBox.Pawn;
 
 namespace eraSandBox.Coitus;
 
@@ -12,7 +13,7 @@ public class PartsBuilder
 
     public static PartsBuilder Instance { get; } = new();
 
-    public static Dictionary<string, OrganPart> MakeParts(TestPawn owner, string template)
+    public static Dictionary<string, OrganPart> MakeParts(CellThing owner, string template)
     {
         var (vaginaInfos, mentulaInfos) = LinkXml.AssignPartLink(template);
         var partList = new Dictionary<string, OrganPart>();
@@ -26,7 +27,7 @@ public class PartsBuilder
 
             var vaginaAspect = new CoitusVaginaAspect(part);
             DefXml.AssignDef(vaginaAspect, baseName);
-            part.vaginaAspect = vaginaAspect;
+            part.vaginaAspects.Add(vaginaAspect);
             vaginaList.Add(vaginaAspect);
             partList.AddAndSkip(part.baseName, part);
         }
@@ -39,7 +40,7 @@ public class PartsBuilder
 
             var mentulaAspect = new CoitusMentulaAspect(part);
             DefXml.AssignDef(mentulaAspect, baseName);
-            part.mentulaAspect = mentulaAspect;
+            part.mentulaAspects.Add(mentulaAspect);
             mentulaList.Add(mentulaAspect);
             partList.AddAndSkip(part.baseName, part);
         }

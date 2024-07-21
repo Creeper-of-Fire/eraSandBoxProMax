@@ -10,7 +10,7 @@ public class CoitusMentulaAspect(OrganPart owner) : CoitusAspect(owner)
     public readonly Dictionary<CoitusVaginaAspect, int> insert = new();
 
     [NeedInitialize]
-    public readonly IList<CoitusMentulaAspect> linksTo = new List<CoitusMentulaAspect>();
+    public readonly List<CoitusMentulaAspect> linksTo = new List<CoitusMentulaAspect>();
 
 
     public void Agere() //启动效果，包括Vagina和Mentula效果

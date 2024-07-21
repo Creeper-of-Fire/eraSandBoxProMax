@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eraSandBox.Pawn;
 
 namespace eraSandBox.Coitus.Part;
 
@@ -12,7 +13,7 @@ public class CoitusVaginaRoute : ICloneable
 {
     public readonly CoitusVaginaRouteDiameterScale diameter;
     public readonly CoitusVaginaRouteLengthScale length;
-    public TestPawn owner;
+    public CellThing owner;
 
     /// <summary> 真正的创造一个Route需要使用<see cref="GetRoutes" /> </summary>
     private CoitusVaginaRoute()

@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using eraSandBox.Pawn;
 
 namespace eraSandBox.Coitus.Part;
 
-public class OrganPart(TestPawn owner, string baseName)
+public class OrganPart(CellThing owner, string baseName)
 {
     [NeedInitialize]
     public readonly string baseName = baseName;
 
-    public readonly TestPawn owner = owner;
+    public readonly CellThing owner = owner;
 
     [NeedInitialize]
-    public IList<CoitusMentulaAspect> mentulaAspects;
+    public List<CoitusMentulaAspect> mentulaAspects;
 
     [NeedInitialize]
-    public IList<CoitusVaginaAspect> vaginaAspects;
+    public List<CoitusVaginaAspect> vaginaAspects;
 }

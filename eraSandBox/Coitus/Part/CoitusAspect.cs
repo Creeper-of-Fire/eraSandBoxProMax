@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using eraSandBox.Pawn;
 
 namespace eraSandBox.Coitus.Part;
 
@@ -30,7 +31,7 @@ public abstract class CoitusAspect(OrganPart owner) : INeedInitialize, ILinkTo<C
     [NeedDefInitialize]
     protected int lengthLevel;
 
-    public IList<LinkPoint<CoitusAspect>> linkTo { get; } = new List<LinkPoint<CoitusAspect>>();
+    public List<LinkPoint<CoitusAspect>> linkTo { get; } = new();
 
     public string baseName =>
         this.def.defName;
@@ -47,11 +48,11 @@ public abstract class CoitusAspect(OrganPart owner) : INeedInitialize, ILinkTo<C
                 this.diameterLevel, this);
     }
 
-    protected static int CalculateBaseLength(TestPawn pawn, int lengthTenThousandth) =>
-        pawn.heightMillimeter * lengthTenThousandth / TenThousand;
+    protected static int CalculateBaseLength(CellThing cellThing, int lengthTenThousandth) =>
+        cellThing.ScaleMillimeter * lengthTenThousandth / TenThousand;
 
-    protected static int CalculateBaseDiameter(TestPawn pawn, int lengthTenThousandth) =>
-        CalculateBaseLength(pawn, lengthTenThousandth);
+    protected static int CalculateBaseDiameter(CellThing cellThing, int lengthTenThousandth) =>
+        CalculateBaseLength(cellThing, lengthTenThousandth);
 
     public void Agere() //启动效果，包括Vagina和Mentula效果
     {
