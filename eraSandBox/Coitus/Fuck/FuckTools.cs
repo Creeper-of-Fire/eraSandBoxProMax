@@ -155,8 +155,8 @@ public static partial class FuckUtility
         nowMentulaEnumerator.MoveNext();
         var nowVagina = nowVaginaEnumerator.Current;
         var nowMentula = nowMentulaEnumerator.Current;
-        var oldVaginaLengthRemain = 0;
-        var oldMentulaLengthRemain = 0;
+        int oldVaginaLengthRemain = 0;
+        int oldMentulaLengthRemain = 0;
         if (nowVagina == null)
             throw new NullReferenceException();
         if (nowMentula == null)
@@ -170,11 +170,11 @@ public static partial class FuckUtility
                 throw new NullReferenceException();
             if (nowMentula == null)
                 throw new NullReferenceException();
-            var newVaginaLength = nowVagina.length.NowScaleMillimeter();
-            var newMentulaLength = nowMentula.length.OriginalMillimeter();
+            int newVaginaLength = nowVagina.length.NowScaleMillimeter();
+            int newMentulaLength = nowMentula.length.OriginalMillimeter();
 
-            var newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
-            var newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
+            int newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
+            int newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
 
             fuckerPart.Add(nowMentula);
 

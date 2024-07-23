@@ -23,7 +23,7 @@ public class CoitusVaginaRoute : ICloneable
         this.diameter = new CoitusVaginaRouteDiameterScale(this);
     }
 
-    public List<CoitusVaginaRoutePiece> PartLink { get; private set; } = new();
+    public List<CoitusVaginaRoutePiece> PartLink { get; private set; } = [];
 
     public List<CoitusVaginaAspect> AllParts =>
         this.PartLink.Select(piece => piece.value).ToList();

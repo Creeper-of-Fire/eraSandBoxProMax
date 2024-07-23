@@ -10,7 +10,7 @@ namespace eraSandBox.Coitus;
 [Obsolete]
 public class AxisOld
 {
-    protected List<Point> points = new();
+    protected List<Point> points = [];
 
     public List<Point> Points =>
         this.points;
@@ -48,8 +48,8 @@ public class AxisOld
         nowMentulaEnumerator.MoveNext();
         var nowVagina = nowVaginaEnumerator.Current;
         var nowMentula = nowMentulaEnumerator.Current;
-        var oldVaginaLengthRemain = 0;
-        var oldMentulaLengthRemain = 0;
+        int oldVaginaLengthRemain = 0;
+        int oldMentulaLengthRemain = 0;
         Debug.Assert(nowVagina != null, nameof(nowVagina) + " != null");
         Debug.Assert(nowMentula != null, nameof(nowMentula) + " != null");
         Check();
@@ -60,10 +60,10 @@ public class AxisOld
         {
             while (true)
             {
-                var newVaginaLength = nowVagina.Length;
-                var newMentulaLength = nowMentula.Length;
-                var newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
-                var newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
+                int newVaginaLength = nowVagina.Length;
+                int newMentulaLength = nowMentula.Length;
+                int newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
+                int newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
                 switch ((MathUtility.Comparing)newMentulaLengthRemain.CompareTo(newVaginaLengthRemain))
                 {
                     case MathUtility.Comparing.Equal:
@@ -108,9 +108,9 @@ public class AxisOld
 
     public void MakeAxis(IEnumerable<int> distanceList)
     {
-        var x = 0;
+        int x = 0;
         this.Append(x);
-        foreach (var distance in distanceList)
+        foreach (int distance in distanceList)
         {
             x += distance;
             this.Append(x);
@@ -122,13 +122,13 @@ public class AxisOld
     public void Sort()
     {
         this.points.Sort();
-        for (var index = 0; index < this.points.Count; index++)
+        for (int index = 0; index < this.points.Count; index++)
             this.points[index].index = index;
     }
 
     public AxisOld Clone()
     {
-        return new AxisOld()
+        return new AxisOld
         {
             points = this.points.ToArray().ToList()
         };
@@ -167,7 +167,7 @@ public class AxisOld
     /// <returns> </returns>
     public int GetIntervalIndex(Point point, int index = 0)
     {
-        var startIndex = this.GetEndPoint(point, index);
+        int startIndex = this.GetEndPoint(point, index);
         if (this.points[startIndex] == point)
             startIndex -= 1;
 
@@ -179,16 +179,16 @@ public class AxisOld
     public (int, int, int, int) GetIntervalInfo(Point pointA, Point pointB, int index = 0)
     {
         MakeSureASmallerThanB(ref pointA, ref pointB);
-        var startIndex = this.GetEndPoint(pointA, index);
-        var endIndex = this.GetEndPoint(pointB, index);
-        var distanceFirst = this.points[startIndex + 1] - pointA;
-        var distanceLast = pointB - this.points[endIndex];
+        int startIndex = this.GetEndPoint(pointA, index);
+        int endIndex = this.GetEndPoint(pointB, index);
+        int distanceFirst = this.points[startIndex + 1] - pointA;
+        int distanceLast = pointB - this.points[endIndex];
         return (startIndex, endIndex, distanceFirst, distanceLast);
     }
 
     public static int IntervalOverlapScale(Point pointA0, Point pointA1, Point pointB0, Point pointB1)
     {
-        var scale = pointA0 > pointB0
+        int scale = pointA0 > pointB0
             ? pointB1 - pointA0
             : pointA1 - pointB0;
         return scale < 0 ? 0 : scale;
@@ -234,7 +234,7 @@ public class AxisOld
     protected static IEnumerable<Interval> AssignTwoAxis(AxisOld axisBackground, AxisOld axisFocus)
     {
         var points = new List<Point>();
-        for (var index = 0; index < Math.Max(axisBackground.points.Count, axisFocus.points.Count); index++)
+        for (int index = 0; index < Math.Max(axisBackground.points.Count, axisFocus.points.Count); index++)
         {
             var p1 = axisBackground.points[index];
             var p2 = axisFocus.points[index];
@@ -410,7 +410,7 @@ public class AxisOld
 
         public Interval(int index, Point start, Point end)
         {
-            this.contain = new List<Point>();
+            this.contain = [];
             this.index = index;
             this.start = start;
             this.end = end;
@@ -446,7 +446,7 @@ public class AxisOld
                 var prevPoint = this.start; //启动至index=0
                 var nowPoint = this.contain.First();
                 containInfo.Add(nowPoint.index - 1, nowPoint - prevPoint);
-                for (var i = 1; i < this.contain.Count; i++)
+                for (int i = 1; i < this.contain.Count; i++)
                 {
                     nowPoint = this.contain[i];
                     prevPoint = this.contain[i - 1];

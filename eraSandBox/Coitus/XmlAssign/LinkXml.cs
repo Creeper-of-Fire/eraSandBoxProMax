@@ -60,7 +60,7 @@ public class LinkXml : Xml
         {
             if (!part.HasAttribute(attributeName))
                 return null;
-            var input = part.GetAttribute(attributeName);
+            string? input = part.GetAttribute(attributeName);
             const string pattern = @"(\d*),(\d*)";
             var match = Regex.Match(input, pattern);
             if (!match.Success)
@@ -118,7 +118,7 @@ public class LinkXml : Xml
         // 生成不重复的info对象
         var infoDict = new Dictionary<string, LinkInfoWithStartPoint>();
         foreach (var newRoute in routes.Select(route => route.Cast<T>().ToList()))
-            for (var i = 0; i < newRoute.Count; i++)
+            for (int i = 0; i < newRoute.Count; i++)
             {
                 var nowObject = newRoute[i];
                 if (!infoDict.ContainsKey(GetName(nowObject)))
@@ -146,7 +146,7 @@ public class LinkXml : Xml
                 {
                     if (points == null)
                         return new LinkInfoWithStartPoint.LinkStartPoint(null, isLinkToPrev);
-                    var (pointToPrev, pointToNext) = ((int?, int?))points;
+                    (int? pointToPrev, int? pointToNext) = ((int?, int?))points;
                     return isLinkToPrev
                         ? new LinkInfoWithStartPoint.LinkStartPoint(pointToPrev, true)
                         : new LinkInfoWithStartPoint.LinkStartPoint(pointToNext, false);

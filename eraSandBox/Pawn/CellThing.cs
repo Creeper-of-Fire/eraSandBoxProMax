@@ -12,7 +12,7 @@ namespace eraSandBox.Pawn;
 /// </summary>
 public abstract class CellThing : IGameObject, IInCell, IHasScale, IHasParts
 {
-    public string uuid;
+    public string uuid = string.Empty;
 
     protected CellThing(Cell position, int scaleMillimeter, string partsTemplate)
     {
@@ -22,10 +22,10 @@ public abstract class CellThing : IGameObject, IInCell, IHasScale, IHasParts
         this.partsTemplate = partsTemplate;
     }
 
-    public virtual void takeTurn()
+    public virtual void TakeTurn()
     {
-        AddToTop(this.SendMessageToCell);
-        AddToBot(this.ReceiveMessageFromCell);
+        // AddToTop(this.SendMessageToCell);
+        // AddToBot(this.ReceiveMessageFromCell);
     }
 
     public PartManager parts { get; }
@@ -40,28 +40,28 @@ public abstract class CellThing : IGameObject, IInCell, IHasScale, IHasParts
     public virtual Cell position { get; }
 
 
-    protected virtual void SendMessageToCell()
+    public virtual void SendMessageToCell()
     {
         foreach (var message in this.parts.MakeMessageSpreader())
             message.Spread();
     }
 
-    protected virtual void ReceiveMessageFromCell()
+    public virtual void ReceiveMessageFromCell()
     {
     }
 
     protected static void AddToTop(params Action[] actions)
     {
-        TotalWorldUtility.AddToTop(actions);
+        TotalWorld.TotalWorldUtility.AddToTop(actions);
     }
 
     protected static void AddToBot(params Action[] actions)
     {
-        TotalWorldUtility.AddToBot(actions);
+        TotalWorld.TotalWorldUtility.AddToBot(actions);
     }
 
     protected static void AddToMid(params Action[] actions)
     {
-        TotalWorldUtility.AddToMid(actions);
+        TotalWorld.TotalWorldUtility.AddToMid(actions);
     }
 }

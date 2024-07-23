@@ -9,7 +9,7 @@ namespace eraSandBox.Coitus;
 [Obsolete]
 public class Axis
 {
-    protected List<Point> points = new();
+    protected List<Point> points = [];
 
     public List<Point> Points =>
         this.points;
@@ -47,8 +47,8 @@ public class Axis
         nowMentulaEnumerator.MoveNext();
         var nowVagina = nowVaginaEnumerator.Current;
         var nowMentula = nowMentulaEnumerator.Current;
-        var oldVaginaLengthRemain = 0;
-        var oldMentulaLengthRemain = 0;
+        int oldVaginaLengthRemain = 0;
+        int oldMentulaLengthRemain = 0;
         if (nowVagina == null)
             throw new NullReferenceException();
         if (nowMentula == null)
@@ -62,10 +62,10 @@ public class Axis
                 throw new NullReferenceException();
             if (nowMentula == null)
                 throw new NullReferenceException();
-            var newVaginaLength = nowVagina.Length;
-            var newMentulaLength = nowMentula.Length;
-            var newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
-            var newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
+            int newVaginaLength = nowVagina.Length;
+            int newMentulaLength = nowMentula.Length;
+            int newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
+            int newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
             switch ((MathUtility.Comparing)newMentulaLengthRemain.CompareTo(newVaginaLengthRemain))
             {
                 case MathUtility.Comparing.Equal:
@@ -109,9 +109,9 @@ public class Axis
 
     public void MakeAxis(IEnumerable<int> distanceList)
     {
-        var x = 0;
+        int x = 0;
         this.Append(x);
-        foreach (var distance in distanceList)
+        foreach (int distance in distanceList)
         {
             x += distance;
             this.Append(x);
@@ -123,13 +123,13 @@ public class Axis
     public void Sort()
     {
         this.points.Sort();
-        for (var index = 0; index < this.points.Count; index++)
+        for (int index = 0; index < this.points.Count; index++)
             this.points[index].index = index;
     }
 
     public Axis Clone()
     {
-        return new Axis()
+        return new Axis
         {
             points = this.points.ToArray().ToList()
         };
@@ -268,7 +268,7 @@ public class Axis
 
         public Interval(int index, Point start, Point end)
         {
-            this.contain = new List<Point>();
+            this.contain = [];
             this.index = index;
             this.start = start;
             this.end = end;

@@ -14,25 +14,32 @@ namespace eraSandBox.Pawn;
 public class Animal(Cell position, int scaleMillimeter = 1700, string partsTemplate = "人类")
     : CellThing(position, scaleMillimeter, partsTemplate)
 {
-    private List<InterestOfMessage> interests { get; } = new();
+    protected List<InterestOfMessage> interests { get; } = [];
+    protected List<Memory> memories { get; } = [];
+    protected List<View> views { get; } = [];
 
-    public override void takeTurn()
+    public override void ReceiveMessageFromCell()
     {
-        base.takeTurn();
-    }
-
-    protected override void ReceiveMessageFromCell()
-    {
+        this.views.Clear();
         base.ReceiveMessageFromCell();
-        var tempView = this.position.messages.Select(this.ViewMessage);
+        var tempViews = this.position.messages.Select(this.ViewMessage);
+        foreach (var tempView in tempViews)
+        {
+            if (tempView.CanBeMemory())
+                this.memories.Add(new Memory(tempView));
+            if (tempView.CanBeView())
+                this.views.Add(tempView);
+        }
     }
 
-    protected virtual View ViewMessage<T>(T message) where T : Message
-    {
-        return InterestOfMessage.ProcessView(this.interests, this.parts.ProcessMessage(message));
-    }
+    public bool ContainMemory(string ID) =>
+        this.memories.Any(memory => memory.ID == ID);
 
-    public class AnimalDef : Def
+    public bool ContainView(string ID) =>
+        this.views.Any(view => view.message.ID == ID);
+
+    protected virtual View ViewMessage(Message message)
     {
+        return InterestOfMessage.ProcessView(this.interests, this.parts.ReceiveMessageFromCell(message));
     }
 }

@@ -10,17 +10,27 @@ namespace eraSandBox.World;
 /**
  * 构成世界的最基本单元
  */
-public class Cell : IGameObject
+public class Cell(SubWorld owner, string id, SubWorld? canMoveTo = null) : IGameObject
 {
-    public SubWorld canMoveTo;
-    public SubWorld owner;
-    public List<CellThing> pawnsInThisCell { get; } = new();
-    public List<Message> messages { get; } = new();
-    private List<Cell> neighbors { get; } = new();
+    public SubWorld owner = owner;
+    public string ID = id;
+    public SubWorld? canMoveTo = canMoveTo;
 
-    public void takeTurn()
+    public List<Message> messages { get; } = [];
+    public List<Cell> neighbors { get; } = [];
+    public List<CellThing> pawnsInThisCell { get; } = [];
+
+    public Cell AddPawn(CellThing cellThing)
     {
-        this.pawnsInThisCell.ForEach(pawn => pawn.takeTurn());
+        this.pawnsInThisCell.Add(cellThing);
+        return this;
+    }
+
+    public void TakeTurn()
+    {
+        this.pawnsInThisCell.ForEach(pawn => pawn.SendMessageToCell());
+        this.pawnsInThisCell.ForEach(pawn => pawn.ReceiveMessageFromCell());
+        this.pawnsInThisCell.ForEach(pawn => pawn.TakeTurn());
     }
 
     /// <summary>
@@ -45,7 +55,7 @@ public class Cell : IGameObject
 
                 queue.Enqueue(this);
                 visited.Add(this);
-                var depth = maxDepth;
+                int depth = maxDepth;
                 while (queue.Count > 0 && depth > 0)
                 {
                     var currentCell = queue.Dequeue();

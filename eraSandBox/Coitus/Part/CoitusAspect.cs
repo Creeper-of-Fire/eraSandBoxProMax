@@ -27,7 +27,7 @@ public abstract class CoitusAspect(OrganPart owner) : INeedInitialize, ILinkTo<C
     /// <value> <see cref="lengthLevel" /> 和 <see cref="diameterLevel" /> 是整个运行过程中唯一需要被外部修改的数值 </value>
     [NeedDefInitialize] protected int lengthLevel;
 
-    public List<LinkPoint<CoitusAspect>> linkTo { get; } = new();
+    public List<LinkPoint<CoitusAspect>> linkTo { get; } = [];
 
     public string baseName =>
         this.def.defName;

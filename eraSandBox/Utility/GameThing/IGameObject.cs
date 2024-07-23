@@ -2,5 +2,5 @@
 
 public interface IGameObject
 {
-    public void takeTurn();
+    public void TakeTurn();
 }

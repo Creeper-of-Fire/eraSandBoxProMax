@@ -15,7 +15,7 @@ public class PartsBuilder
         var partList = new Dictionary<string, OrganPart>();
         var vaginaList = new List<CoitusVaginaAspect>();
         var mentulaList = new List<CoitusMentulaAspect>();
-        foreach (var baseName in vaginaInfos.Select(vaginaInfo => vaginaInfo.Key))
+        foreach (string baseName in vaginaInfos.Select(vaginaInfo => vaginaInfo.Key))
         {
             var part = partList.TryGetValue(baseName, out var value)
                 ? value
@@ -28,7 +28,7 @@ public class PartsBuilder
             partList.AddAndSkip(part.baseName, part);
         }
 
-        foreach (var baseName in mentulaInfos.Select(mentulaInfo => mentulaInfo.Key))
+        foreach (string baseName in mentulaInfos.Select(mentulaInfo => mentulaInfo.Key))
         {
             var part = partList.TryGetValue(baseName, out var value)
                 ? value

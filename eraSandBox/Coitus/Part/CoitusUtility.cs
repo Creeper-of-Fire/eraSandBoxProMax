@@ -32,7 +32,7 @@ public interface IScale
 
 public class MinusOneToOneRatio
 {
-    private readonly List<float> _ratioList = new();
+    private readonly List<float> _ratioList = [];
 
     /// <summary> 只会不断增加，大的覆盖小的 </summary>
     private float _ratioMax = -1;

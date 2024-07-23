@@ -1,0 +1,15 @@
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\bin\Debug\net8.0\eraSandBox.exe
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\bin\Debug\net8.0\eraSandBox.deps.json
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\bin\Debug\net8.0\eraSandBox.runtimeconfig.json
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\bin\Debug\net8.0\eraSandBox.dll
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\bin\Debug\net8.0\eraSandBox.pdb
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.AssemblyInfoInputs.cache
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.AssemblyInfo.cs
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.csproj.CoreCompileInputs.cache
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.sourcelink.json
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.dll
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\refint\eraSandBox.dll
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.pdb
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\eraSandBox.genruntimeconfig.cache
+C:\Users\Creeper10\Desktop\Project For Fun\eraSandBox\eraSandBox\obj\Debug\net8.0\ref\eraSandBox.dll
