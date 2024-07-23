@@ -1,4 +1,4 @@
-﻿namespace eraSandBox.Coitus.Part;
+﻿namespace eraSandBox.Coitus;
 
 public class CoitusScaleLinear : IScale
 {
@@ -28,6 +28,8 @@ public class CoitusScaleLinear : IScale
         this.baseValueMillimeter * this.scaleLevel;
 
     /// <summary> 存储原始的数据值 </summary>
-    public int OriginalMillimeter() =>
-        this.ValueMillimeter;
+    public int OriginalMillimeter()
+    {
+        return this.ValueMillimeter;
+    }
 }

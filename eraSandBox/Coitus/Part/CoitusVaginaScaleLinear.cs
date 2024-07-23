@@ -1,4 +1,4 @@
-﻿namespace eraSandBox.Coitus.Part;
+﻿namespace eraSandBox.Coitus;
 
 public class CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel, CoitusAspect parent)
     : CoitusScaleLinear(baseValueMillimeter, scaleLevel, parent), IVaginaScale
@@ -11,13 +11,19 @@ public class CoitusVaginaScaleLinear(int baseValueMillimeter, int scaleLevel, Co
 
     public MinusOneToOneRatio ExpansionOrContractionRatio { get; } = new();
 
-    public int PerceptMillimeter() =>
-        (int)(this.OriginalMillimeter() / LevelToScale / this.Parent.tighticityLevel);
+    public int PerceptMillimeter()
+    {
+        return (int)(this.OriginalMillimeter() / LevelToScale / this.Parent.tighticityLevel);
+    }
 
     /// <summary> 用于“结点”类型的计算 </summary>
-    public int ComfortMillimeter() =>
-        this.OriginalMillimeter();
+    public int ComfortMillimeter()
+    {
+        return this.OriginalMillimeter();
+    }
 
-    public int UnComfortMillimeter() =>
-        (int)(this.OriginalMillimeter() * this.Parent.elasticityLevel / LevelToScale);
+    public int UnComfortMillimeter()
+    {
+        return (int)(this.OriginalMillimeter() * this.Parent.elasticityLevel / LevelToScale);
+    }
 }

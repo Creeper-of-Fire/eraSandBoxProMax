@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace eraSandBox.Coitus;
+namespace eraSandBox.Coitus.XmlAssign;
 
 public class DefXml : Xml
 {
@@ -28,7 +28,7 @@ public class DefXml : Xml
 
     private static IEnumerable<string> GetAllDefFile()
     {
-        string[] fileDirs = Directory.GetFiles(XmlPath, "*Def.xml", SearchOption.AllDirectories);
+        var fileDirs = Directory.GetFiles(XmlPath, "*Def.xml", SearchOption.AllDirectories);
         return fileDirs.Select(Path.GetFileNameWithoutExtension);
     }
 
@@ -36,7 +36,7 @@ public class DefXml : Xml
     {
         foreach (XmlNode defNode in this.rootNode.ChildNodes)
         {
-            object nodeDeSerialized = XmlUtility.DeSerializer(this.GetType().Namespace, defNode);
+            var nodeDeSerialized = XmlUtility.DeSerializer(this.GetType().Namespace, defNode);
             this._defs.Add(
                 (nodeDeSerialized.GetType().Name
                     , (string)nodeDeSerialized.GetType().GetField("defName").GetValue(nodeDeSerialized)),
@@ -50,8 +50,8 @@ public class DefXml : Xml
     public static void AssignDef(object defNeeder, string defName)
     {
         var defOfDefNeeder = defNeeder.GetType().GetField("def");
-        string defType = defOfDefNeeder.FieldType.Name;
-        object newDef = MakeDef(defType, defName);
+        var defType = defOfDefNeeder.FieldType.Name;
+        var newDef = MakeDef(defType, defName);
         defOfDefNeeder.SetValue(defNeeder, newDef);
     }
 
@@ -59,7 +59,7 @@ public class DefXml : Xml
     {
         if (Instance._defs.ContainsKey((defType, defName)))
             return Instance._defs[(defType, defName)];
-        object def = DataUtility.Copy(Instance._defs[(defType, "Default")]);
+        var def = DataUtility.Copy(Instance._defs[(defType, "Default")]);
         def.GetType().GetField("defName").SetValue(def, defName);
         return def;
     }

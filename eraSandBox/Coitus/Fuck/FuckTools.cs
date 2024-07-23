@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus.Part;
+using eraSandBox.Utility;
 
-namespace eraSandBox.Coitus;
+namespace eraSandBox.Coitus.Fuck;
 
 /// <summary> 所有关于Fuck的内容都放在这里 </summary>
 public static partial class FuckUtility
@@ -120,24 +120,24 @@ public static partial class FuckUtility
         });
 
         foreach (var part in vaginaRoute.parent.PartLink)
-        {
             part.value.length.ExpansionOrContractionRatio.Add(vaginaRoute.ExpansionOrContractionRatio
                 .RatioMax());
-        }
 
         return fuckMode;
     }
 
-    private static float ExpansionOrContractionRatio(IVaginaScale vagina, int mentulaInsert, int total) =>
-        (float)(mentulaInsert - vagina.OriginalMillimeter())
-        / Math.Abs(total - vagina.OriginalMillimeter());
+    private static float ExpansionOrContractionRatio(IVaginaScale vagina, int mentulaInsert, int total)
+    {
+        return (float)(mentulaInsert - vagina.OriginalMillimeter())
+               / Math.Abs(total - vagina.OriginalMillimeter());
+    }
     //使用Abs。这样的话，当输入为Percept时，就会返回负数
 
     private static void AssignVaginaForMentula(
         CoitusVaginaRoute vaginaRoute,
         CoitusMentulaRoute mentulaRoute,
         bool reverse,
-        in HashSet<CoitusMentulaAspect> fuckerPart
+        in List<CoitusMentulaAspect> fuckerPart
     )
     {
         var vaginaIntervals = vaginaRoute.PartLink.Select(piece => piece.value);
@@ -155,8 +155,8 @@ public static partial class FuckUtility
         nowMentulaEnumerator.MoveNext();
         var nowVagina = nowVaginaEnumerator.Current;
         var nowMentula = nowMentulaEnumerator.Current;
-        int oldVaginaLengthRemain = 0;
-        int oldMentulaLengthRemain = 0;
+        var oldVaginaLengthRemain = 0;
+        var oldMentulaLengthRemain = 0;
         if (nowVagina == null)
             throw new NullReferenceException();
         if (nowMentula == null)
@@ -170,11 +170,11 @@ public static partial class FuckUtility
                 throw new NullReferenceException();
             if (nowMentula == null)
                 throw new NullReferenceException();
-            int newVaginaLength = nowVagina.length.NowScaleMillimeter();
-            int newMentulaLength = nowMentula.length.OriginalMillimeter();
+            var newVaginaLength = nowVagina.length.NowScaleMillimeter();
+            var newMentulaLength = nowMentula.length.OriginalMillimeter();
 
-            int newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
-            int newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
+            var newVaginaLengthRemain = newVaginaLength - oldVaginaLengthRemain;
+            var newMentulaLengthRemain = newMentulaLength - oldMentulaLengthRemain;
 
             fuckerPart.Add(nowMentula);
 

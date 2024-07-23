@@ -1,4 +1,4 @@
-﻿namespace eraSandBox.GameThing;
+﻿namespace eraSandBox.Utility.GameThing;
 
 public interface IHasScale
 {

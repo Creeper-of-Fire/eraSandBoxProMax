@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace eraSandBox.Coitus;
+namespace eraSandBox.Coitus.XmlAssign;
 
 public static class DataUtility
 {
@@ -55,6 +55,7 @@ public static class DataUtility
     //     }
     // }
 
+    [Obsolete("Obsolete")]
     public static T Copy<T>(T obj)
     {
         if (obj == null) return default;
@@ -104,21 +105,29 @@ public class LinkPoint<T>(int pointA, int pointB, T objectA, T objectB)
     {
     }
 
-    public int GetPoint(T objectAorB) =>
-        Equals(this.objectA, objectAorB)
+    public int GetPoint(T objectAorB)
+    {
+        return Equals(this.objectA, objectAorB)
             ? this.pointAPercentage
             : this.pointBPercentage;
+    }
 
-    public T GetOppositeObject(T objectAorB) =>
-        Equals(this.objectA, objectAorB)
+    public T GetOppositeObject(T objectAorB)
+    {
+        return Equals(this.objectA, objectAorB)
             ? this.objectB
             : this.objectA;
+    }
 
-    public int GetOppositePoint(T objectAorB) =>
-        Equals(this.objectA, objectAorB)
+    public int GetOppositePoint(T objectAorB)
+    {
+        return Equals(this.objectA, objectAorB)
             ? this.pointBPercentage
             : this.pointAPercentage;
+    }
 
-    public static (T, T, int, int) ToPoint<T2>(LinkPoint<T2> point) =>
-        ((T)(object)point.objectA, (T)(object)point.objectB, point.pointAPercentage, point.pointBPercentage);
+    public static (T, T, int, int) ToPoint<T2>(LinkPoint<T2> point)
+    {
+        return ((T)(object)point.objectA, (T)(object)point.objectB, point.pointAPercentage, point.pointBPercentage);
+    }
 }

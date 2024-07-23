@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace eraSandBox.Coitus;
+namespace eraSandBox.Coitus.XmlAssign;
 
 public class LinkXml : Xml
 {
@@ -36,7 +36,6 @@ public class LinkXml : Xml
         //speciesNode位于<template name="xxx">
 
         foreach (XmlElement node in templateNode.ChildNodes)
-        {
             switch (node.Name)
             {
                 case "vaginaLink":
@@ -46,7 +45,6 @@ public class LinkXml : Xml
                     mentulaLinks.Add(node);
                     break;
             }
-        }
         //此时两个list之中为<vaginaRoute>、<mentulaRoute>
 
         var vaginaDict =
@@ -62,7 +60,7 @@ public class LinkXml : Xml
         {
             if (!part.HasAttribute(attributeName))
                 return null;
-            string input = part.GetAttribute(attributeName);
+            var input = part.GetAttribute(attributeName);
             const string pattern = @"(\d*),(\d*)";
             var match = Regex.Match(input, pattern);
             if (!match.Success)
@@ -90,17 +88,19 @@ public class LinkXml : Xml
     private static Dictionary<string, LinkInfoWithStartPoint> AssignLinkInfo<T>(
         IReadOnlyCollection<IEnumerable> routes,
         Func<T, string> NameGetter,
-        Func<T, (int?, int?)?> LinkByPointGetter) =>
-        AssignLinkInfo(routes, GetParts(routes, NameGetter), NameGetter, LinkByPointGetter);
+        Func<T, (int?, int?)?> LinkByPointGetter)
+    {
+        return AssignLinkInfo(routes, GetParts(routes, NameGetter), NameGetter, LinkByPointGetter);
+    }
 
     private static Dictionary<string, LinkInfoWithStartPoint> GetParts<T>(IEnumerable<IEnumerable> routes,
         Func<T, string> NameGetter)
     {
-        var hashSet = new HashSet<string>();
+        var List = new List<string>();
         foreach (var route in routes)
         foreach (var part in route.Cast<T>())
-            hashSet.Add(NameGetter(part));
-        return hashSet.ToDictionary(name => name, name => new LinkInfoWithStartPoint(name));
+            List.Add(NameGetter(part));
+        return List.ToDictionary(name => name, name => new LinkInfoWithStartPoint(name));
     }
 
     /// <summary> 因为所有的对象都是从一个Set里面提上来的，所以各种引用关系得以保留 </summary>
@@ -118,8 +118,7 @@ public class LinkXml : Xml
         // 生成不重复的info对象
         var infoDict = new Dictionary<string, LinkInfoWithStartPoint>();
         foreach (var newRoute in routes.Select(route => route.Cast<T>().ToList()))
-        {
-            for (int i = 0; i < newRoute.Count; i++)
+            for (var i = 0; i < newRoute.Count; i++)
             {
                 var nowObject = newRoute[i];
                 if (!infoDict.ContainsKey(GetName(nowObject)))
@@ -147,7 +146,7 @@ public class LinkXml : Xml
                 {
                     if (points == null)
                         return new LinkInfoWithStartPoint.LinkStartPoint(null, isLinkToPrev);
-                    (int? pointToPrev, int? pointToNext) = ((int?, int?))points;
+                    var (pointToPrev, pointToNext) = ((int?, int?))points;
                     return isLinkToPrev
                         ? new LinkInfoWithStartPoint.LinkStartPoint(pointToPrev, true)
                         : new LinkInfoWithStartPoint.LinkStartPoint(pointToNext, false);
@@ -163,7 +162,6 @@ public class LinkXml : Xml
                     return NameGetter(otherObject);
                 }
             }
-        }
 
         return infoDict;
     }

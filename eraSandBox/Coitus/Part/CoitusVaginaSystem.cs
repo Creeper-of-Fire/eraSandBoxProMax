@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 public class CoitusVaginaSystem(PartSystem owner)
 {
@@ -17,10 +17,8 @@ public class CoitusVaginaSystem(PartSystem owner)
         var needUpdateRoutes = new List<CoitusVaginaRoute>();
         foreach (var part in section)
         foreach (var route in this.TotalVaginaRoutes)
-        {
             if (route.Contains(part))
                 needUpdateRoutes.Add(route);
-        }
 
         var needUpdateRoutesStartPart = new List<CoitusVaginaAspect>();
         foreach (var route in needUpdateRoutes)
@@ -50,10 +48,8 @@ public class CoitusVaginaSystem(PartSystem owner)
         var entranceParts = new List<CoitusVaginaAspect>();
 
         foreach (var coitusSearchSurface in total)
-        {
             if (coitusSearchSurface.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance)
                 entranceParts.Add(coitusSearchSurface);
-        }
         //选取起点（这步有一点多余，但是性能消耗很小，所以就无所谓了）
 
         var totalRoutes = CoitusVaginaRoute.GetRoutes(entranceParts);

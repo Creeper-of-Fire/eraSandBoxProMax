@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 public class CoitusMentulaSystem(PartSystem owner)
 {

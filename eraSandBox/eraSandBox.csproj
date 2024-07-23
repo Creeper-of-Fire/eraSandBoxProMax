@@ -1,96 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{16EB4CB7-09BF-4819-B5B8-7E7AC7C64D4E}</ProjectGuid>
         <OutputType>Exe</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <RootNamespace>eraSandBox</RootNamespace>
-        <AssemblyName>eraSandBox</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-        <LangVersion>latest</LangVersion>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Xml"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Coitus\Fuck\FuckProcess.cs"/>
-        <Compile Include="Coitus\Fuck\FuckTools.cs"/>
-        <Compile Include="Coitus\MathUtility.cs"/>
-        <Compile Include="Coitus\PartsBuilder.cs" />
-        <Compile Include="Coitus\Part\CoitusAspectDef.cs" />
-        <Compile Include="Coitus\Part\CoitusMentulaSystem.cs" />
-        <Compile Include="Coitus\Part\OrganPart.cs" />
-        <Compile Include="Coitus\Part\CoitusAspect.cs" />
-        <Compile Include="Coitus\Part\CoitusPartsRoute.cs" />
-        <Compile Include="Coitus\Part\PartSystem.cs" />
-        <Compile Include="Coitus\Part\CoitusMentulaAspect.cs" />
-        <Compile Include="Coitus\Part\CoitusMentulaRoute.cs" />
-        <Compile Include="Coitus\Part\CoitusScaleLinear.cs" />
-        <Compile Include="Coitus\Part\CoitusVaginaAspect.cs" />
-        <Compile Include="Coitus\Part\CoitusVaginaRoute.cs" />
-        <Compile Include="Coitus\Part\CoitusVaginaSystem.cs" />
-        <Compile Include="Coitus\Part\CoitusVaginaScaleLinear.cs" />
-        <Compile Include="Coitus\Part\CoitusUtility.cs" />
-        <Compile Include="Coitus\XmlAssign\DataUtility.cs" />
-        <Compile Include="Coitus\XmlAssign\DefXml.cs" />
-        <Compile Include="Coitus\XmlAssign\GetXml.cs" />
-        <Compile Include="Coitus\XmlAssign\LinkXml.cs" />
-        <Compile Include="Coitus\XmlAssign\XmlUtility.cs" />
-        <Compile Include="GameThing\IHasParts.cs" />
-        <Compile Include="GameThing\IHasScale.cs" />
-        <Compile Include="GameThing\ISaveAble.cs" />
-        <Compile Include="GameThing\IInCell.cs" />
-        <Compile Include="JosnData\AnimalData.cs" />
-        <Compile Include="Pawn\Animal.cs" />
-        <Compile Include="Pawn\CellThing.cs" />
-        <Compile Include="Pawn\WearThing.cs" />
-        <Compile Include="Program.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="Thought\MessageSpreader.cs" />
-        <Compile Include="Thought\MessageSystem.cs" />
-        <Compile Include="GameThing\IGameObject.cs" />
-        <Compile Include="World\Cell.cs" />
-        <Compile Include="World\SubWorld.cs" />
-        <Compile Include="World\TotalWorld.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="Coitus\XmlData\Def.xml"/>
-        <Content Include="Coitus\XmlData\LinkSetup.xml"/>
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
 
 </Project>

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eraSandBox.Coitus.XmlAssign;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 /// <summary>
 ///     有四种类型：入口、通道、终点、表面。这些类型是根据它“连接”的对象实时获得的。 有三个形态属性：长度和粗细等级（以及对应的已扩张量）， 还有具体形状； 两个存储属性：容积、表面积；
@@ -33,19 +34,15 @@ public class CoitusVaginaAspect(OrganPart owner) : CoitusAspect(owner), ILinkTo<
         Hidden = 5
     }
 
-    [NeedDefInitialize]
-    public CoitusLinkType coitusLinkType = CoitusLinkType.Null;
+    [NeedDefInitialize] public CoitusLinkType coitusLinkType = CoitusLinkType.Null;
 
-    [NeedDefInitialize]
-    public int elasticityLevel;
+    [NeedDefInitialize] public int elasticityLevel;
 
     public CoitusMatterContainedData matterContain;
 
-    [NeedDefInitialize]
-    public int plasticityLevel;
+    [NeedDefInitialize] public int plasticityLevel;
 
-    [NeedDefInitialize]
-    public int tighticityLevel;
+    [NeedDefInitialize] public int tighticityLevel;
 
     public new CoitusVaginaScaleLinear length
     {

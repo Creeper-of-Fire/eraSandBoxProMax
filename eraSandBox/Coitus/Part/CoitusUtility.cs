@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eraSandBox.Coitus.Fuck;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 public interface IVaginaScale : IScale
 {
@@ -37,8 +38,10 @@ public class MinusOneToOneRatio
     private float _ratioMax = -1;
 
     /// <summary> 只会不断增加，大的覆盖小的 </summary>
-    public float RatioMax() =>
-        this._ratioMax;
+    public float RatioMax()
+    {
+        return this._ratioMax;
+    }
 
     private void UpdateRatioMax()
     {
@@ -64,17 +67,25 @@ public class MinusOneToOneRatio
     }
 
 
-    public static bool operator >=(MinusOneToOneRatio ratio, float item) =>
-        ratio._ratioMax >= item;
+    public static bool operator >=(MinusOneToOneRatio ratio, float item)
+    {
+        return ratio._ratioMax >= item;
+    }
 
-    public static bool operator <=(MinusOneToOneRatio ratio, float item) =>
-        ratio._ratioMax <= item;
+    public static bool operator <=(MinusOneToOneRatio ratio, float item)
+    {
+        return ratio._ratioMax <= item;
+    }
 
-    public static int operator *(int item, MinusOneToOneRatio ratio) =>
-        (int)(item * ratio._ratioMax);
+    public static int operator *(int item, MinusOneToOneRatio ratio)
+    {
+        return (int)(item * ratio._ratioMax);
+    }
 
-    public bool IsZero() =>
-        this._ratioMax == 0;
+    public bool IsZero()
+    {
+        return this._ratioMax == 0;
+    }
 }
 
 public static class CoitusUtility
@@ -125,15 +136,21 @@ public static class CoitusUtility
     }
 
     //小于Perceptible则为ImPerceptible，大于Perceptible则为Comfortable，大于Comfortable则为UnComfortable，大于UnComfortable则为Destructive
-    public static FuckUtility.ComfortType ComfortType(this IVaginaScale vaginaScale, float scale) =>
-        scale <= vaginaScale.PerceptMillimeter() ? FuckUtility.ComfortType.ImPerceptible
-        : scale <= vaginaScale.ComfortMillimeter() ? FuckUtility.ComfortType.Comfortable
-        : scale <= vaginaScale.UnComfortMillimeter() ? FuckUtility.ComfortType.UnComfortable
-        : FuckUtility.ComfortType.Destructive;
+    public static FuckUtility.ComfortType ComfortType(this IVaginaScale vaginaScale, float scale)
+    {
+        return scale <= vaginaScale.PerceptMillimeter() ? FuckUtility.ComfortType.ImPerceptible
+            : scale <= vaginaScale.ComfortMillimeter() ? FuckUtility.ComfortType.Comfortable
+            : scale <= vaginaScale.UnComfortMillimeter() ? FuckUtility.ComfortType.UnComfortable
+            : FuckUtility.ComfortType.Destructive;
+    }
 
-    public static int ToPerceptMillimeter(this IVaginaScale vaginaScale) =>
-        vaginaScale.ComfortMillimeter() - vaginaScale.PerceptMillimeter();
+    public static int ToPerceptMillimeter(this IVaginaScale vaginaScale)
+    {
+        return vaginaScale.ComfortMillimeter() - vaginaScale.PerceptMillimeter();
+    }
 
-    public static int ToUnComfortMillimeter(this IVaginaScale vaginaScale) =>
-        vaginaScale.UnComfortMillimeter() - vaginaScale.ComfortMillimeter();
+    public static int ToUnComfortMillimeter(this IVaginaScale vaginaScale)
+    {
+        return vaginaScale.UnComfortMillimeter() - vaginaScale.ComfortMillimeter();
+    }
 }

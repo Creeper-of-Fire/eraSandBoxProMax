@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus.Part;
+using eraSandBox.Coitus.XmlAssign;
 using eraSandBox.Pawn;
 
 namespace eraSandBox.Coitus;
 
 public class PartsBuilder
 {
-    private PartsBuilder()
-    {
-    }
-
     public static PartsBuilder Instance { get; } = new();
 
     public static Dictionary<string, OrganPart> MakeParts(CellThing owner, string template)
@@ -19,7 +15,7 @@ public class PartsBuilder
         var partList = new Dictionary<string, OrganPart>();
         var vaginaList = new List<CoitusVaginaAspect>();
         var mentulaList = new List<CoitusMentulaAspect>();
-        foreach (string baseName in vaginaInfos.Select(vaginaInfo => vaginaInfo.Key))
+        foreach (var baseName in vaginaInfos.Select(vaginaInfo => vaginaInfo.Key))
         {
             var part = partList.TryGetValue(baseName, out var value)
                 ? value
@@ -32,7 +28,7 @@ public class PartsBuilder
             partList.AddAndSkip(part.baseName, part);
         }
 
-        foreach (string baseName in mentulaInfos.Select(mentulaInfo => mentulaInfo.Key))
+        foreach (var baseName in mentulaInfos.Select(mentulaInfo => mentulaInfo.Key))
         {
             var part = partList.TryGetValue(baseName, out var value)
                 ? value
@@ -67,28 +63,25 @@ public class PartsBuilder
                 linkInfo => linkInfo,
                 linkInfo => nodesNeedLink.First(nullLink => nullLink.baseName == linkInfo.baseName));
         foreach (var thisSide in nodeMap.Keys)
+        foreach (var pair in thisSide.linkTo)
         {
-            foreach (var pair in thisSide.linkTo)
-            {
-                var thatSide = pair.Key;
-                var newPoints = new LinkPoint<L2>
-                (
-                    pair.Value.percentage,
-                    thatSide.linkTo.First(p => p.Key.baseName == thisSide.baseName).Value.percentage,
-                    nodeMap[thatSide],
-                    nodeMap[thisSide]
-                );
-                nodeMap[thisSide].linkTo.Add((P2)newPoints);
-
-                // var reversePoints = new LinkPoint<L2>
-                // (
-                //     newPoints.endPoint,
-                //     newPoints.startPoint,
-                //     newPoints.end,
-                //     newPoints.start
-                // );
-                //nodeMap[thatSide].linkTo.Add((P2)newPoints);
-            }
+            var thatSide = pair.Key;
+            var newPoints = new LinkPoint<L2>
+            (
+                pair.Value.percentage,
+                thatSide.linkTo.First(p => p.Key.baseName == thisSide.baseName).Value.percentage,
+                nodeMap[thatSide],
+                nodeMap[thisSide]
+            );
+            nodeMap[thisSide].linkTo.Add((P2)newPoints);
+            // var reversePoints = new LinkPoint<L2>
+            // (
+            //     newPoints.endPoint,
+            //     newPoints.startPoint,
+            //     newPoints.end,
+            //     newPoints.start
+            // );
+            //nodeMap[thatSide].linkTo.Add((P2)newPoints);
         }
     }
 }

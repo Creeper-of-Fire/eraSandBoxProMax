@@ -1,49 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
-using eraSandBox.Coitus.Part;
 using eraSandBox.Pawn;
-using eraSandBox.World;
 
 namespace eraSandBox.Thought;
 
+// /// <summary>
+// /// MessageSpreader负责生成Message，并且传递它们
+// /// </summary>
+// public abstract class MessageSpreader<T>
+//     where T : Message
+// {
+//     public abstract List<T> makeMessage(Cell centerCell, CellThing cellThing);
+// }
+
 /// <summary>
-/// MessageSpreader负责生成Message，并且传递它们
+///     对于声音来说，其理论上无限传播，实际上其weight每传播一格就会被衰减至1/128，若weight为1.0f，则不会继续传播
 /// </summary>
-public abstract class MessageSpreader<T>
-    where T : Message
+/// <param name="sender"></param>
+/// <param name="id"></param>
+/// <param name="weight"></param>
+public class VoiceMessageSpreader(CellThing sender, string id, float weight = MessageSpreader.DEFAULT_WEIGHT)
+    : MessageSpreader(sender, id, weight)
 {
-    public abstract List<T> makeMessage(Cell centerCell, CellThing cellThing);
-}
-
-public class VoiceMessageSpreader : MessageSpreader<VoiceMessageSpreader.VoiceMessage>
-{
-    public static VoiceMessageSpreader Instance { get; } = new();
-
-    public override List<VoiceMessage> makeMessage(Cell centerCell, CellThing cellThing)
+    public override void Spread()
     {
-    };
+        var maxDepth = (int)Math.Log(this.startWeight, 128);
 
-    public class VoiceMessage(Cell cell, CellThing sender, float weight = Message.DEFAULT_WEIGHT)
-        : Message(cell, sender, weight)
-    {
-        public override float getCoverRate(OrganPart organPart) =>
-            throw new NotImplementedException();
+        this.senderCell.ForNeighbors(
+            (cell, depth) =>
+            {
+                var weight = (float)(this.startWeight / Math.Pow(128, depth));
+                if (weight >= 1.0f)
+                    cell.messages.Add(this.MakeNewMessage(cell, weight));
+            },
+            maxDepth);
     }
 }
 
-public class SmellMessageSpreader : MessageSpreader<SmellMessageSpreader.SmellMessage>
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="id"></param>
+/// <param name="weight"></param>
+public class SmellMessageSpreader(CellThing sender, string id, float weight = MessageSpreader.DEFAULT_WEIGHT)
+    : MessageSpreader(sender, id, weight)
 {
-    public static SmellMessageSpreader Instance { get; } = new();
-
-    public override List<SmellMessage> makeMessage(Cell centerCell, CellThing cellThing)
+    public override void Spread()
     {
-        
-    };
-
-    public class SmellMessage(Cell cell, CellThing sender, float weight = Message.DEFAULT_WEIGHT)
-        : Message(cell, sender, weight)
-    {
-        public override float getCoverRate(OrganPart organPart) =>
-            throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 }

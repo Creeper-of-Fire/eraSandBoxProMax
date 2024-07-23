@@ -1,91 +1,119 @@
 ﻿using System.Collections.Generic;
-using eraSandBox.Coitus.Part;
+using System.Linq;
 using eraSandBox.Pawn;
 using eraSandBox.World;
 
 namespace eraSandBox.Thought;
 
 /// <summary>
-/// Message会转化为View，Pawn会对外发射不同种类的Message
+///     Message会转化为View，Pawn会对外发射不同种类的Message
 /// </summary>
-public abstract class Message
+public class Message(
+    MessageSpreader messageSpreader,
+    Cell cell,
+    float weight
+)
 {
-    public const float DEFAULT_WEIGHT = 100.0f;
+    // public MessageSpreader messageSpreader => this.messageSpreader;
 
     /// <summary>
     /// 发送者
     /// </summary>
-    public CellThing sender;
-
-    /// <summary>
-    /// 所在的Cell
-    /// </summary>
-    public Cell cell;
+    public readonly CellThing sender = messageSpreader.sender;
 
     /// <summary>
     /// 权重，默认值为100.0f
     /// </summary>
-    public float weight;
+    public readonly float weight = weight;
 
     /// <summary>
-    /// Message有不同的Tag
+    /// 所在的Cell
     /// </summary>
-    public List<MessageTag> messageTags;
+    public Cell cell = cell;
 
-    public string ID;
-    public string name;
+    /// <summary>
+    ///     Message有不同的Tag
+    /// </summary>
+    public List<MessageTag> messageTags => this.messageSpreader.messageTags;
 
-    public List<OrganPart> containedParts;
+    public string name => this.messageSpreader.name;
+    private readonly MessageSpreader messageSpreader = messageSpreader;
 
-    protected Message(Cell cell, CellThing sender, string id, float weight = DEFAULT_WEIGHT)
-    {
-        this.sender = sender;
-        this.ID = id;
-        this.cell = cell;
-        this.weight = weight;
-    }
-
-    // /// <summary>
-    // /// 
-    // /// </summary>
-    // /// <param name="otherMessage">另一个消息</param>
-    // /// <returns>覆盖的百分比</returns>
-    // public float PartCovered(Message otherMessage)
+    // public Message MakeCopy()
     // {
-    //     var coverRate = 0.0f;
-    //     this.containedParts.ForEach(part =>
-    //     {
-    //         if (otherMessage.containedParts.Contains(part))
-    //         {
-    //         }
-    //     });
-    //     //第一步，确认是否有重复
-    //     //第二步，
+    //     return new Message(this.messageSpreader, this.cell, this.weight);
     // }
+}
 
-    public abstract float getCoverRate(OrganPart organPart);
-
-    public float getCoverRate(OrganPart, Message otherMessage)
+public abstract class MessageSpreader(
+    CellThing sender,
+    string id,
+    float startWeight = MessageSpreader.DEFAULT_WEIGHT)
+{
+    protected Message MakeNewMessage(Cell cell, float weight)
     {
+        return new Message(this, cell, weight);
     }
+
+    /// <summary>
+    /// 发送者
+    /// </summary>
+    public readonly CellThing sender = sender;
+
+    /// <summary>
+    /// 名字
+    /// </summary>
+    public readonly string name;
+
+    /// <summary>
+    /// 所在的Cell
+    /// </summary>
+    public Cell senderCell => this.sender.position;
+
+    protected const float DEFAULT_WEIGHT = 100.0f;
+
+    /// <summary>
+    /// 权重，默认值为100.0f
+    /// </summary>
+    public readonly float startWeight = startWeight;
+
+    /// <summary>
+    ///     Message有不同的Tag
+    /// </summary>
+    public List<MessageTag> messageTags { get; }
+
+    /// <summary>
+    /// ID
+    /// </summary>
+    public readonly string ID = id;
+
+    public abstract void Spread();
 }
 
 //TODO 字符串比较也许可以优化一下，不过如果性能足够就算了。
 public readonly struct MessageTag(string tagId)
 {
-    public override bool Equals(object obj) =>
-        obj is MessageTag other && this.TagID.Equals(other.TagID);
+    public override bool Equals(object obj)
+    {
+        return obj is MessageTag other && this.TagID.Equals(other.TagID);
+    }
 
-    public override int GetHashCode() =>
-        this.TagID != null ? this.TagID.GetHashCode() : 0;
+    public override int GetHashCode()
+    {
+        return this.TagID != null ? this.TagID.GetHashCode() : 0;
+    }
 
     private readonly string TagID = tagId;
 
-    public static bool operator ==(MessageTag tag1, MessageTag tag2) =>
-        tag1.TagID == tag2.TagID;
+    public static bool operator ==(MessageTag tag1, MessageTag tag2)
+    {
+        return tag1.TagID == tag2.TagID;
+    }
 
-    public static bool operator !=(MessageTag tag1, MessageTag tag2) =>
-        !(tag1 == tag2);
+    public static bool operator !=(MessageTag tag1, MessageTag tag2)
+    {
+        return !(tag1 == tag2);
+    }
 }
 
 /// <summary>
@@ -98,6 +126,23 @@ public struct InterestOfMessage(string tagId, float add = 0.0f, float mul = 1.0f
     public float add = add;
     public float mul = mul;
     public MessageTag messageTag = new(tagId);
+
+    /// <summary>
+    ///     处理View
+    /// </summary>
+    /// <param name="interestList">请输入自身的所有interests</param>
+    /// <param name="view">原来的View</param>
+    /// <returns>返回的是原来的View而非复制</returns>
+    /// TODO 如果遇到性能问题，可以考虑用矩阵来处理
+    public static View ProcessView(IEnumerable<InterestOfMessage> interestList, View view)
+    {
+        var needProcess = interestList.Where(message => view.messageTags.Contains(message.messageTag)).ToList();
+        foreach (var interestOfMessage in needProcess)
+            view.weight += interestOfMessage.add;
+        foreach (var interestOfMessage in needProcess)
+            view.weight *= interestOfMessage.mul;
+        return view;
+    }
 }
 
 /// <summary>
@@ -113,17 +158,21 @@ public struct CoverAbilityOfMessage(string tagId, float sub = 0.0f, float mul = 
 }
 
 /// <summary>
-/// View会转化为Memory，Human会汲取所在Cell中的所有Message，并且根据其观察力生成View
+///     View会转化为Memory，Human会汲取所在Cell中的所有Message，并且根据其观察力生成View
 /// </summary>
-public class View<T>(T message)
-    where T : Message
+public struct View(Message message)
 {
-    public const float CAN_VIEW_RATE = 10.0f;
-    public T message = message;
+    public const float CAN_VIEW_WEIGHT = 10.0f;
+
+    public const float CAN_KNOW_OWNER_WEIGHT = 80.0f;
+
+    private readonly Message message = message;
+    public float weight = message.weight;
+    public List<MessageTag> messageTags => this.message.messageTags;
 }
 
 /// <summary>
-/// Memory会被遗忘，不同的
+///     Memory会被遗忘，不同的
 /// </summary>
 public class Memory
 {

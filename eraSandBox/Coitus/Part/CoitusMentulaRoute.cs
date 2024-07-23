@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 /// <summary> </summary>
 public class CoitusMentulaRoute : ICloneable
@@ -20,19 +20,23 @@ public class CoitusMentulaRoute : ICloneable
 
     /// <summary> 复制自身，只复制 <see cref="parts" /> 里的内容 </summary>
     /// <returns> 自身的复制，类型为 <see cref="object" /> </returns>
-    public object Clone() =>
-        new CoitusMentulaRoute
+    public object Clone()
+    {
+        return new CoitusMentulaRoute
         {
             parts = this.parts.ToArray().ToList()
         };
+    }
 
     public void Add(CoitusMentulaAspect aspect)
     {
         this.parts.Add(aspect);
     }
 
-    public bool Contains(CoitusMentulaAspect aspect) =>
-        this.parts.Contains(aspect);
+    public bool Contains(CoitusMentulaAspect aspect)
+    {
+        return this.parts.Contains(aspect);
+    }
 }
 
 public abstract class CoitusMentulaRouteScale(CoitusMentulaRoute parent)

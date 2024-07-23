@@ -3,7 +3,7 @@
 
 using System;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 [Serializable]
 public class CoitusAspectDef : Def

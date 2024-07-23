@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using eraSandBox.Coitus.XmlAssign;
 using eraSandBox.Pawn;
 
-namespace eraSandBox.Coitus.Part;
+namespace eraSandBox.Coitus;
 
 /// <summary>
 ///     一条路线必定以Surface开始，以End或者Surface结束
@@ -24,16 +25,18 @@ public class CoitusVaginaRoute : ICloneable
 
     public List<CoitusVaginaRoutePiece> PartLink { get; private set; } = new();
 
-    public HashSet<CoitusVaginaAspect> AllParts =>
-        this.PartLink.Select(piece => piece.value).ToHashSet();
+    public List<CoitusVaginaAspect> AllParts =>
+        this.PartLink.Select(piece => piece.value).ToList();
 
     /// <summary> 复制自身，只复制 <see cref="PartLink" /> 里的内容 </summary>
     /// <returns> 自身的复制，类型为 <see cref="object" /> </returns>
-    public object Clone() =>
-        new CoitusVaginaRoute
+    public object Clone()
+    {
+        return new CoitusVaginaRoute
         {
             PartLink = this.PartLink.ToArray().ToList()
         };
+    }
 
     public void GetCoitusVaginaPartInRange(CoitusMentulaRoute mentulaRoute, int pointFirst, int pointLast)
     {
@@ -47,25 +50,33 @@ public class CoitusVaginaRoute : ICloneable
 
     /// <summary> 比较两个路线是否一致 </summary>
     /// <param name="vaginaRoute"> 另一条路线 </param>
-    public bool IsSame(CoitusVaginaRoute vaginaRoute) =>
-        !(this.PartLink.Count == vaginaRoute.PartLink.Count &&
-          this.PartLink.All(vaginaRoute.PartLink.Contains));
+    public bool IsSame(CoitusVaginaRoute vaginaRoute)
+    {
+        return !(this.PartLink.Count == vaginaRoute.PartLink.Count &&
+                 this.PartLink.All(vaginaRoute.PartLink.Contains));
+    }
 
     private bool Contains(CoitusVaginaAspect aspect, LinkPoint<CoitusVaginaAspect> linkFrom)
     {
         return this.PartLink.Any(piece => piece.linkFrom == linkFrom && piece.value == aspect);
     }
 
-    public bool Contains(CoitusVaginaAspect aspect) =>
-        this.AllParts.Contains(aspect);
+    public bool Contains(CoitusVaginaAspect aspect)
+    {
+        return this.AllParts.Contains(aspect);
+    }
 
-    public CoitusVaginaAspect GetEntrance() =>
-        this.PartLink.First().value;
+    public CoitusVaginaAspect GetEntrance()
+    {
+        return this.PartLink.First().value;
+    }
 
     //可优化：存储得到结果（一个route是否为是固定的，如果要修改则会使用重新生成的方法）
     /// <summary> 是否两头都是入口 <see cref="CoitusVaginaAspect.CoitusLinkType.Entrance" /> </summary>
-    public bool HasTwoDirection() =>
-        this.PartLink.Last().value.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance;
+    public bool HasTwoDirection()
+    {
+        return this.PartLink.Last().value.coitusLinkType == CoitusVaginaAspect.CoitusLinkType.Entrance;
+    }
 
     /// <summary> 由给予的入口，获得这些入口对应的所有路线（两端皆为入口的会计算两次） </summary>
     /// <param name="entranceParts"> 入口 </param>

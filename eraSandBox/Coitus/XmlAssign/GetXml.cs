@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace eraSandBox.Coitus;
+namespace eraSandBox.Coitus.XmlAssign;
 
 /// <summary>
 ///     这些类一定含有一个叫做Initialize()的方法，字段则在其中才被初始化

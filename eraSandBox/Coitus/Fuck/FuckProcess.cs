@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using eraSandBox.Coitus.Part;
 
-namespace eraSandBox.Coitus;
+namespace eraSandBox.Coitus.Fuck;
 
 public static partial class FuckUtility
 {
@@ -26,7 +25,7 @@ public static partial class FuckUtility
         var fuckMode = GetFuckModeAndExpansionOrContractionRatio(
             vaginaScale, mentulaInsertLength, fuckAttitude);
 
-        var fuckerPart = new HashSet<CoitusMentulaAspect>();
+        var fuckerPart = new List<CoitusMentulaAspect>();
 
         AssignVaginaForMentula(vaginaScale.parent, mentulaScale.parent,
             fuckMode == FuckModeType.NotFullEntryComfortable || fuckMode == FuckModeType.NotFullEntryUnComfortable,
