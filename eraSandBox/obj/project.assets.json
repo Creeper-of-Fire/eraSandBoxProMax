@@ -1,11 +1,36 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "FluentBehaviourTree/0.0.4": {
+        "type": "package",
+        "compile": {
+          "lib/net35/FluentBehaviourTree.dll": {}
+        },
+        "runtime": {
+          "lib/net35/FluentBehaviourTree.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "FluentBehaviourTree/0.0.4": {
+      "sha512": "DpYdKI8LtDPep+StouvlNITEQsPa+xuFtnm0uE/1foLxi44bVmE6LI3OWTJabXFDdKEsrOrn3if/PLlxRBt/HQ==",
+      "type": "package",
+      "path": "fluentbehaviourtree/0.0.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "fluentbehaviourtree.0.0.4.nupkg.sha512",
+        "fluentbehaviourtree.nuspec",
+        "lib/net35/FluentBehaviourTree.dll"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "FluentBehaviourTree >= 0.0.4"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Creeper10\\.nuget\\packages\\": {}
@@ -43,6 +68,12 @@
     "frameworks": {
       "net8.0": {
         "targetAlias": "net8.0",
+        "dependencies": {
+          "FluentBehaviourTree": {
+            "target": "Package",
+            "version": "[0.0.4, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",
@@ -62,5 +93,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'FluentBehaviourTree 0.0.4' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "FluentBehaviourTree",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

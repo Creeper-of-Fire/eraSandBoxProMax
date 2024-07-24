@@ -8,4 +8,12 @@
         <RootNamespace>eraSandBox</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FluentBehaviourTree" Version="0.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="XmlData\XmlFile\" />
+    </ItemGroup>
+
 </Project>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using eraSandBox.Utility.GameThing;
+﻿using eraSandBox.Utility.GameThing;
 
 namespace eraSandBox.World;
 
@@ -27,8 +24,8 @@ public class TotalWorld : IGameObject
 
         this.Actions.Clear();
     }
-    
-    
+
+
     public static class TotalWorldUtility
     {
         // public static void AddToTop(this Action action)

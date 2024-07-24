@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using eraSandBox.Utility.GameThing;
-
-namespace eraSandBox.Utility;
+﻿namespace eraSandBox.Utility;
 
 public static class MathUtility
 {
@@ -54,7 +49,6 @@ public static class MathUtility
     }
 
 
-
     public readonly struct TwoAction<T>(Action<T> action1, Action<T> action2)
     {
         public readonly Action<T> action1 = action1;
@@ -89,24 +83,21 @@ public static class MathUtility
             });
         }
 
-        public static TwoAction<T> Combine(List<TwoAction<T>> twoActions) => Combine(twoActions.ToArray());
-        
+        public static TwoAction<T> Combine(List<TwoAction<T>> twoActions)
+        {
+            return Combine(twoActions.ToArray());
+        }
+
         public static TwoAction<TAction> MapToProcessTwoAction<TAction, TList>(
             List<TList> enumerable,
             Func<TList, TwoAction<TAction>> twoActionMaker)
         {
             return new TwoAction<TAction>(t =>
             {
-                foreach (var tInList in enumerable)
-                {
-                    twoActionMaker.Invoke(tInList).action1.Invoke(t);
-                }
+                foreach (var tInList in enumerable) twoActionMaker.Invoke(tInList).action1.Invoke(t);
             }, t =>
             {
-                foreach (var tInList in enumerable)
-                {
-                    twoActionMaker.Invoke(tInList).action2.Invoke(t);
-                }
+                foreach (var tInList in enumerable) twoActionMaker.Invoke(tInList).action2.Invoke(t);
             });
         }
 

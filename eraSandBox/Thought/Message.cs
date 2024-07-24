@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using eraSandBox.Pawn;
+﻿using eraSandBox.Pawn;
 using eraSandBox.Utility;
 using eraSandBox.World;
 

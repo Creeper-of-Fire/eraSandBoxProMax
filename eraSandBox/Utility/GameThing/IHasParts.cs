@@ -1,5 +1,4 @@
-﻿using eraSandBox.Coitus.XmlAssign;
-using eraSandBox.CoitusSimple;
+﻿using eraSandBox.CoitusSimple;
 
 namespace eraSandBox.Utility.GameThing;
 

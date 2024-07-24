@@ -1,5 +1,4 @@
-﻿using System;
-using eraSandBox.CoitusSimple;
+﻿using eraSandBox.CoitusSimple;
 using eraSandBox.Utility.GameThing;
 using eraSandBox.World;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using eraSandBox.Pawn;
-using eraSandBox.World;
+﻿using eraSandBox.Pawn;
 
 namespace eraSandBox.Thought;
 
@@ -34,11 +31,13 @@ public readonly struct MessageTag(string tagId)
 /// <summary>
 /// </summary>
 /// <param name="tagId">会进行处理的tag</param>
-/// <param name="add">先计算</param>
-/// <param name="mul">后计算</param>
-public struct InterestOfMessage(string tagId, float add = 0.0f, float mul = 1.0f)
+/// <param name="mul">乘算 (不进行加算，因为很显然兴趣只能乘)</param>
+public struct InterestOfMessage(
+    string tagId,
+    // float add =1.0f, 
+    float mul = 1.0f)
 {
-    public float add = add;
+    // public float add = add;
     public float mul = mul;
     public MessageTag messageTag = new(tagId);
 
@@ -51,10 +50,9 @@ public struct InterestOfMessage(string tagId, float add = 0.0f, float mul = 1.0f
     /// TODO 如果遇到性能问题，可以考虑用矩阵来处理
     public static View ProcessView(List<InterestOfMessage> interestList, View view)
     {
-        var needProcess = interestList.Where(message => view.messageTags.Contains(message.messageTag)).ToList();
-        foreach (var interestOfMessage in needProcess)
-            view.weight += interestOfMessage.add;
-        foreach (var interestOfMessage in needProcess)
+        // foreach (var interestOfMessage in needProcess)
+        //     view.weight += interestOfMessage.add;
+        foreach (var interestOfMessage in interestList.Where(message => view.messageTags.Contains(message.messageTag)))
             view.weight *= interestOfMessage.mul;
         return view;
     }
@@ -79,11 +77,15 @@ public class View(Message message)
     public float weight = message.weight;
     public List<MessageTag> messageTags => this.message.messageTags;
 
-    public bool CanBeMemory() =>
-        this.weight >= CAN_KNOW_OWNER_WEIGHT;
+    public bool CanBeMemory()
+    {
+        return this.weight >= CAN_KNOW_OWNER_WEIGHT;
+    }
 
-    public bool CanBeView() =>
-        this.weight >= CAN_VIEW_WEIGHT;
+    public bool CanBeView()
+    {
+        return this.weight >= CAN_VIEW_WEIGHT;
+    }
 }
 
 /// <summary>

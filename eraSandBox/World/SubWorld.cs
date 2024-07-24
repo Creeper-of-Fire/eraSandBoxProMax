@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using eraSandBox.Coitus;
-using eraSandBox.Pawn;
+﻿using eraSandBox.Pawn;
 using eraSandBox.Utility.GameThing;
 
 namespace eraSandBox.World;

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using eraSandBox.Coitus;
-using eraSandBox.Coitus.XmlAssign;
-using eraSandBox.Thought;
+﻿using eraSandBox.Thought;
 using eraSandBox.World;
 
 namespace eraSandBox.Pawn;
@@ -10,7 +6,6 @@ namespace eraSandBox.Pawn;
 /**
  * Animal是所有具有意识，并且可以主动行动的事物的基类
  */
-[NeedDefInitialize]
 public class Animal(Cell position, int scaleMillimeter = 1700, string partsTemplate = "人类")
     : CellThing(position, scaleMillimeter, partsTemplate)
 {
@@ -32,11 +27,15 @@ public class Animal(Cell position, int scaleMillimeter = 1700, string partsTempl
         }
     }
 
-    public bool ContainMemory(string ID) =>
-        this.memories.Any(memory => memory.ID == ID);
+    public bool ContainMemory(string ID)
+    {
+        return this.memories.Any(memory => memory.ID == ID);
+    }
 
-    public bool ContainView(string ID) =>
-        this.views.Any(view => view.message.ID == ID);
+    public bool ContainView(string ID)
+    {
+        return this.views.Any(view => view.message.ID == ID);
+    }
 
     protected virtual View ViewMessage(Message message)
     {

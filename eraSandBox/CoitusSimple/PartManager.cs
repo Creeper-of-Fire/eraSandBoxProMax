@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using eraSandBox.Coitus.XmlAssign;
-using eraSandBox.Pawn;
+﻿using eraSandBox.Pawn;
 using eraSandBox.Thought;
-using eraSandBox.Utility;
 using eraSandBox.Utility.GameThing;
 
 namespace eraSandBox.CoitusSimple;
 
-public class PartManager(IHasParts owner) : INeedInitialize
+public class PartManager(IHasParts owner) : INeedInitialize, ICanMakeMessage
 {
     public readonly IHasParts owner = owner;
     private List<ThingOnBody> allThings { get; } = [];
@@ -21,16 +17,19 @@ public class PartManager(IHasParts owner) : INeedInitialize
 
     public IEnumerable<MessageSpreader> MakeMessageSpreader()
     {
-        this.messageSpreaders = this.allThings.SelectMany(wear => wear.MakeMessageSpreader()).ToList();
+        this.messageSpreaders = this.allThings.SelectMany(thing => thing.MakeMessageSpreader()).ToList();
         return this.messageSpreaders;
     }
 
     public View ReceiveMessageFromCell(Message message)
     {
+        return this.ProcessView(new View(message));
     }
 
-    public View ProcessView(View view) =>
-        ThingOnBody.ProcessView(this.allThings, view);
+    public View ProcessView(View view)
+    {
+        return ThingOnBody.ProcessView(this.allThings, view);
+    }
 
     public void Render()
     {
@@ -49,8 +48,10 @@ public static class MessageData
 {
     private static Dictionary<string, string> IDToName;
 
-    public static string GetName(string id) =>
-        IDToName.GetValueOrDefault(id, string.Empty);
+    public static string GetName(string id)
+    {
+        return IDToName.GetValueOrDefault(id, string.Empty);
+    }
 
     private static Dictionary<string, List<MessageTag>> IDToTag = new()
     {
@@ -60,14 +61,18 @@ public static class MessageData
     /// <summary>
     /// 只是给出了初始的Tag，之后还可以添加其他的Tag
     /// </summary>
-    public static List<MessageTag> GetStartMessageTag(string id) =>
-        IDToTag.GetValueOrDefault(id, []);
+    public static List<MessageTag> GetStartMessageTag(string id)
+    {
+        return IDToTag.GetValueOrDefault(id, []);
+    }
 
     private static Dictionary<string, string> IDToDescription = new()
     {
         { "T-shit", "衬衫" }
     };
 
-    public static string GetDescription(string id) =>
-        IDToDescription.GetValueOrDefault(id, string.Empty);
+    public static string GetDescription(string id)
+    {
+        return IDToDescription.GetValueOrDefault(id, string.Empty);
+    }
 }
